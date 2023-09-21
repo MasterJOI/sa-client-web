@@ -1,0 +1,44 @@
+{
+  "description": "Форма реєстрації нового викладача",
+  "controls": {
+    "teacher": {
+      "controlType": "group",
+      "label": "Викладач",
+      "order": 0,
+      "controls": {
+        "hireDate": {
+          "controlType": "input",
+          "type": "date",
+          "label": "Дата прийняття на роботу",
+          "value": "2023-09-01",
+          "placeholder": "",
+          "order": 0,
+          "validators": {
+            "required": true
+          }
+        },
+        "department": {
+          "controlType": "select",
+          "label": "Структурний підрозділ",
+          "value": "",
+          "order": 1,
+          "options": [],
+          "validators": {
+            "required": true
+          }
+        },
+        "teacherId": {
+          "controlType": "input",
+          "type": "text",
+          "label": "Унікальний номер у системі (ID викладача в ЄДБО)",
+          "value": "",
+          "placeholder": "",
+          "order": 2,
+          "validators": {
+            "required": true
+          }
+        }
+      }
+    }
+  }
+}

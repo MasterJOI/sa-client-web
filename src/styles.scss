@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+  }
+
+  /*forms*/
+
+  fieldset {
+    @apply rounded border border-secondary-600 px-2 pt-2 pb-3 flex flex-col gap-2.5;
+
+    & legend {
+      @apply ml-[0.75rem] text-label font-kharkiv-tone
+    }
+  }
+
+  .form-field {
+
+    /*inputs*/
+
+    [type="text"],
+    [type="email"],
+    [type="url"],
+    [type="password"],
+    [type="number"],
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="search"],
+    [type="tel"],
+    [type="time"],
+    [type="week"],
+    [multiple],
+    & textarea,
+    & select {
+      @apply w-full rounded border-gray-300 shadow-sm
+      focus:border-primary-500 focus:outline-none
+      focus:ring-1 focus:ring-primary-500;
+    }
+
+    [type="checkbox"],
+    [type="radio"] {
+      @apply rounded border-gray-300 text-primary-600 focus:ring-primary-600;
+    }
+
+    & label {
+      @apply pl-3 text-label font-inter
+    }
+
+    ::placeholder {
+      @apply text-gray-400
+    }
+
+    /*input:invalid*/
+
+    .ng-valid.ng-touched:not([formGroupName]):not([formArrayName]):not([ngModelGroup]):not(form) {
+      @apply border-success-600 focus:ring-success-600;
+    }
+
+    .ng-invalid.ng-touched:not([ngModelGroup="address"]):not([formGroupName="address"]):not([formArrayName]):not(form) {
+      @apply border-solid border-alert-400 focus:ring-alert-400;
+    }
+  }
+}
+
+@layer components {
+
+  .reusable-button {
+    @apply rounded-md px-3 py-2 shadow-sm lg:px-8 cursor-pointer;
+    @apply disabled:bg-gray-50 disabled:shadow-none disabled:text-gray-800 disabled:cursor-default #{!important};
+
+    &.button--primary {
+      @apply bg-primary-500 text-gray-950 hover:bg-secondary-500;
+    }
+
+    &.button--dark {
+      @apply bg-gray-950 text-gray-0 hover:bg-gray-600 ;
+    }
+  }
+
+  @mixin input-message {
+    @apply text-input-message pt-2
+  }
+
+  .input-error {
+    @include input-message;
+    @apply animate-input-message text-alert-400;
+  }
+
+  .input-info {
+    @include input-message;
+    @apply animate-input-message text-link;
+  }
+
+  .scrollable {
+    @apply overflow-y-scroll overflow-x-hidden;
+  }
+}
+
+@font-face {
+  font-family: KharkivTone;
+  src: url(assets/fonts/KharkivTone.ttf) format('truetype')
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/*scrollbar*/
+
+/* width */
+::-webkit-scrollbar {
+  @apply w-0.5 rounded overflow-y-hidden
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-transparent
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-600 rounded-full
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-500
+}

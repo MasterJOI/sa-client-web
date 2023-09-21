@@ -1,0 +1,57 @@
+{
+  "description": "Форма реєстрації нового студента",
+  "controls": {
+    "student": {
+      "controlType": "group",
+      "label": "Студент",
+      "order": 0,
+      "controls": {
+        "enrollmentDate": {
+          "controlType": "input",
+          "type": "date",
+          "label": "Дата вступу в заклад освіти",
+          "value": "2023-09-01",
+          "placeholder": "",
+          "order": 0,
+          "validators": {
+            "required": true
+          }
+        },
+        "studentType": {
+          "controlType": "select",
+          "label": "Освітній ступінь",
+          "value": "",
+          "order": 1,
+          "options": [
+            {
+              "label": "Бакалавр",
+              "value": "1"
+            },
+            {
+              "label": "Магістр",
+              "value": "2"
+            },
+            {
+              "label": "Аспірант",
+              "value": "3"
+            }
+          ],
+          "validators": {
+            "required": true
+          }
+        },
+        "studentId": {
+          "controlType": "input",
+          "type": "text",
+          "label": "Унікальний номер у системі",
+          "value": "",
+          "placeholder": "",
+          "order": 2,
+          "validators": {
+            "required": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "Форма логіну користувача",
+  "controls": {
+    "username": {
+      "controlType": "input",
+      "type": "text",
+      "label": "Логін",
+      "placeholder": "user",
+      "value": "",
+      "order": 0,
+      "validators": {
+        "required": true,
+        "minLength": 2
+      }
+    },
+    "password": {
+      "controlType": "input",
+      "type": "password",
+      "label": "Пароль",
+      "placeholder": "password",
+      "value": "",
+      "order": 1,
+      "validators": {
+        "required": true,
+        "minLength": 6
+      }
+    }
+  }
+}
