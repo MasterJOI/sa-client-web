@@ -10,7 +10,8 @@ import {OnTouchedErrorStateMatcher} from './input-error/error-state-matcher.serv
     [formControl]:not([withoutValidationErrors]),
     [formControlName]:not([withoutValidationErrors]),
     [formGroupName]:not([withoutValidationErrors]),
-    [ngModelGroup]:not([withoutValidationErrors])
+    [ngModelGroup]:not([withoutValidationErrors]),
+    [dynamicValidatorMessage]
   `,
   standalone: true
 })

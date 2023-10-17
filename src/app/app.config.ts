@@ -8,9 +8,12 @@ import {NgxWebstorageModule} from 'ngx-webstorage';
 import {RouterModule} from '@angular/router';
 import {routes} from './app-routing';
 import {HttpTokenInterceptor} from './services/http.token.interceptor';
+import {initFlowbite} from 'flowbite';
+import {LoadingService} from './services/loading.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    LoadingService,
     importProvidersFrom(
       RouterModule.forRoot(routes),
       BrowserAnimationsModule,
@@ -29,6 +32,7 @@ export const appConfig: ApplicationConfig = {
       multi: true,
       useFactory: (authStore: AuthStore) => {
         return () => {
+          initFlowbite();
           authStore.autoLogin();
           return authStore.user$.pipe(take(1));
         }

@@ -3,6 +3,8 @@ import { InjectionToken } from "@angular/core"
 export const ERROR_MESSAGES: { [key: string]: (args?: any) => string} = {
   required: () => `Це обов'язкове поле`,
   requiredTrue: () => `Це обов'язкове поле`,
+  max: ({max}) => `Максимально допустиме число: ${max}`,
+  maxlength: () => `Надто багато символів`,
   email: () => `Це має бути дійсна електронна адреса`,
   minlength: ({requiredLength}) => `Довжина має бути принаймні ${requiredLength} символи(-ів)`,
   appPasswordShouldMatch: () => `Паролі мають співпадати`,

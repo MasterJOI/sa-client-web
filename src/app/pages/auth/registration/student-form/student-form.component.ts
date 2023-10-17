@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@an
 import {CommonModule} from '@angular/common';
 import {DynamicValidatorMessage} from '../../../../forms/error/dynamic-validator-message.directive';
 import {ControlContainer, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {DropdownModule} from 'primeng/dropdown';
+import {cycles} from '../../../../util/constants';
 
 @Component({
   selector: 'app-student-form',
@@ -12,7 +14,7 @@ import {ControlContainer, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
       useFactory: () => inject(ControlContainer, {skipSelf: true})
     }
   ],
-  imports: [CommonModule, DynamicValidatorMessage, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, DynamicValidatorMessage, FormsModule, ReactiveFormsModule, DropdownModule],
   template: `
     <fieldset formGroupName="student">
       <legend>Студент</legend>
@@ -22,9 +24,13 @@ import {ControlContainer, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
       </div>
       <div class="form-field">
         <label for="studentType">Освітній ступінь</label>
-        <select id="studentType" formControlName="studentType">
-          <option *ngFor="let type of studentTypes; let i = index" [value]="i">{{type}}</option>
-        </select>
+        <p-dropdown id="studentType"
+                    styleClass="w-full"
+                    [options]="cycles"
+                    formControlName="studentType"
+                    optionLabel="label"
+                    optionValue="value"
+        ></p-dropdown>
       </div>
       <div class="form-field">
         <label for="studentId">Унікальний номер у системі</label>
@@ -38,7 +44,6 @@ import {ControlContainer, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StudentFormComponent implements OnInit, OnDestroy {
-  studentTypes = ['Баклавр', 'Магістр', 'Аспірант'];
 
   parentContainer = inject(ControlContainer);
   fb = inject(FormBuilder);
@@ -52,7 +57,7 @@ export class StudentFormComponent implements OnInit, OnDestroy {
       this.fb.nonNullable.group({
         enrollmentDate: ['', [Validators.required]],
         studentType: this.fb.nonNullable.control(
-          this.studentTypes[this.studentTypes.length - 1],
+          'BACHELOR',
           Validators.required
         ),
         studentId: ['', [Validators.required]],
@@ -62,4 +67,6 @@ export class StudentFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.parentFormGroup.removeControl('student');
   }
+
+  protected readonly cycles = cycles;
 }

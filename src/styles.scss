@@ -6,6 +6,10 @@
   :root {
   }
 
+  .screen-scroll {
+    @apply h-[calc(100vh-212px)] overflow-y-scroll pr-2;
+  }
+
   /*forms*/
 
   fieldset {
@@ -17,6 +21,8 @@
   }
 
   .form-field {
+
+    @apply flex flex-col gap-0.5;
 
     /*inputs*/
 
@@ -37,12 +43,24 @@
     & select {
       @apply w-full rounded border-gray-300 shadow-sm
       focus:border-primary-500 focus:outline-none
-      focus:ring-1 focus:ring-primary-500;
+      focus:ring-1 focus:ring-primary-500 disabled:bg-gray-50 disabled:border-none disabled:pointer-events-auto;
     }
 
     [type="checkbox"],
     [type="radio"] {
       @apply rounded border-gray-300 text-primary-600 focus:ring-primary-600;
+    }
+
+    .p-component:focus {
+      @apply shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500;
+    }
+
+    textarea.cdk-textarea-autosize-measuring {
+      @apply h-auto overflow-hidden p-[25px] box-content #{!important};
+    }
+
+    & input::file-selector-button {
+      @apply reusable-button button--dark m-0 mr-1;
     }
 
     & label {
@@ -59,26 +77,73 @@
       @apply border-success-600 focus:ring-success-600;
     }
 
-    .ng-invalid.ng-touched:not([ngModelGroup="address"]):not([formGroupName="address"]):not([formArrayName]):not(form) {
+    .ng-invalid.ng-touched:not([formArrayName]):not(form),
+    .ng-invalid.ng-touched .p-multiselect {
       @apply border-solid border-alert-400 focus:ring-alert-400;
+    }
+
+    /*p-multiselect*/
+
+    .p-multiselect-item {
+      @apply max-w-[450px];
+
+      & span {
+        @apply overflow-hidden text-ellipsis;
+      }
+    }
+
+    .p-multiselect-token {
+      @apply max-w-[200px];
+
+      & span {
+        @apply overflow-hidden text-ellipsis;
+      }
     }
   }
 }
 
 @layer components {
 
+  /*app button*/
+
   .reusable-button {
-    @apply rounded-md px-3 py-2 shadow-sm lg:px-8 cursor-pointer;
-    @apply disabled:bg-gray-50 disabled:shadow-none disabled:text-gray-800 disabled:cursor-default #{!important};
+    @apply rounded-md shadow-sm lg:px-8 cursor-pointer w-max;
+    @apply px-3 py-2 disabled:bg-gray-50 disabled:shadow-none disabled:text-gray-800 disabled:cursor-default #{!important};
 
     &.button--primary {
       @apply bg-primary-500 text-gray-950 hover:bg-secondary-500;
     }
 
+    &.button--outlined {
+      @apply bg-gray-0 text-gray-500 border border-gray-200 hover:text-gray-900 hover:bg-gray-100;
+
+      & p {
+        @apply group-hover:text-gray-600;
+      }
+    }
+
     &.button--dark {
       @apply bg-gray-950 text-gray-0 hover:bg-gray-600 ;
     }
+
+    &.button--danger {
+      @apply bg-red-700 text-gray-0 hover:bg-red-500;
+    }
+
+    &.button--disabled {
+      @apply bg-gray-50 border-none pointer-events-none;
+
+      & p {
+        @apply text-gray-600 #{!important};
+      }
+
+      & img {
+        filter: invert(13%) sepia(0%) saturate(0%) hue-rotate(184deg) brightness(95%) contrast(82%) #{!important};
+      }
+    }
   }
+
+  /*input-message*/
 
   @mixin input-message {
     @apply text-input-message pt-2
@@ -97,6 +162,73 @@
   .scrollable {
     @apply overflow-y-scroll overflow-x-hidden;
   }
+
+  /*list-table*/
+
+  .list-table {
+    @apply rounded shadow-lg;
+
+    /*only for study-results table*/
+    &.study-results table tbody tr td:nth-last-child(-n+3) {
+      @apply px-0 #{!important};
+    }
+
+    .p-datatable-header {
+      @apply bg-gray-20 rounded-t-xl;
+    }
+
+    .p-datatable-thead  {
+      & th {
+        @apply bg-gray-0 text-gray-800 text-title #{!important};
+      }
+    }
+
+    .p-datatable-tbody {
+      @apply text-gray-800 text-body
+    }
+
+    & table {
+      @apply table-fixed;
+    }
+
+    &.with-delete table td:first-child,
+    &.with-delete table th:first-child {
+      @apply w-[70px] #{!important};
+    }
+
+    & table thead tr th,
+    & table tbody tr td {
+      @apply h-16 text-center #{!important};
+      @apply whitespace-nowrap overflow-hidden text-ellipsis;
+    }
+
+    &:not(.without-actions) table tbody tr td:first-child {
+      @apply text-start #{!important};
+    }
+
+    & table tbody tr:last-child {
+      @apply rounded-b-xl
+    }
+
+    & table tbody tr:last-child  {
+      @apply bg-transparent;
+
+      & td {
+        @apply border-none;
+      }
+    }
+  }
+
+  /*sa-modal*/
+
+  .sa-modal {
+    border: 2px solid theme('colors.gray.900');;
+    @apply w-auto rounded shadow;
+
+    .p-dialog-header {
+      @apply gap-2;
+    }
+  }
 }
 
 @font-face {
@@ -110,8 +242,8 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
+body, .p-component {
+  font-family: 'Inter', sans-serif #{!important};
 }
 
 /*scrollbar*/

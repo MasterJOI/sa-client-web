@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {AuthComponent} from '../auth.component';
 import {LogoComponent} from '../../../components/logo/logo.component';
 import {FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ControlInjectorPipe} from '../../../forms/control-injector.pipe';
 import {ButtonComponent} from '../../../components/button/button.component';
 import {Router, RouterLink} from '@angular/router';
 import {DynamicValidatorMessage} from '../../../forms/error/dynamic-validator-message.directive';
@@ -16,7 +15,7 @@ import {LoadingService} from '../../../services/loading.service';
   providers: [
     LoadingService
   ],
-  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ControlInjectorPipe, ButtonComponent, RouterLink, DynamicValidatorMessage],
+  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ButtonComponent, RouterLink, DynamicValidatorMessage],
   template: `
     <app-auth>
       <div class="flex flex-col items-center">

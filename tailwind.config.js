@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts,js}",
+    "./node_modules/flowbite/**/*.js"
   ],
   important: true,
   theme: {
@@ -84,6 +85,11 @@ module.exports = {
         }
       },
       "fontSize": {
+        'small': ['0.75rem', {
+          lineHeight: '0.75rem',
+          letterSpacing: '0',
+          fontWeight: '400',
+        }],
         'body': ['1rem', {
           lineHeight: '1.2rem',
           letterSpacing: '0',
@@ -109,7 +115,6 @@ module.exports = {
           letterSpacing: '0',
           fontWeight: '600',
         }],
-        "base": "1rem",
         "lg": "1.1875rem",
         "xl": "1.4375rem",
         "2xl": "1.75rem",
@@ -153,7 +158,8 @@ module.exports = {
   plugins: [
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
-    require('tailwindcss-font-inter')
+    require('tailwindcss-font-inter'),
+    require('flowbite/plugin')
   ],
 }
 

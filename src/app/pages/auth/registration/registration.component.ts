@@ -11,14 +11,12 @@ import {CommonModule} from '@angular/common';
 import {AuthComponent} from '../auth.component';
 import {LogoComponent} from '../../../components/logo/logo.component';
 import {FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ControlInjectorPipe} from '../../../forms/control-injector.pipe';
 import {ButtonComponent} from '../../../components/button/button.component';
 import {Router, RouterLink} from '@angular/router';
 import {BehaviorSubject, catchError, map, Observable, of, throwError} from 'rxjs';
 import {FormsApi} from '../../../api/forms.api';
 import {AuthApi} from '../../../api/auth.api';
 import {ToastrService} from 'ngx-toastr';
-import {tap} from 'rxjs/operators';
 import {AuthStore} from '../../../services/auth.store';
 import {LoadingService} from '../../../services/loading.service';
 import {PageLoaderComponent} from '../../../components/page-loader/page-loader.component';
@@ -30,6 +28,7 @@ import {DynamicValidatorMessage} from '../../../forms/error/dynamic-validator-me
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {StudentFormComponent} from './student-form/student-form.component';
 import {TeacherFormComponent} from './teacher-form/teacher-form.component';
+import {SubdivisionsService} from '../../../services/subdivisions.service';
 
 @Component({
   selector: 'app-registration',
@@ -37,7 +36,7 @@ import {TeacherFormComponent} from './teacher-form/teacher-form.component';
   providers: [
     LoadingService
   ],
-  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ControlInjectorPipe, ButtonComponent, RouterLink, PageLoaderComponent, ValidatorMessageContainer, DynamicValidatorMessage, StudentFormComponent, TeacherFormComponent],
+  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ButtonComponent, RouterLink, PageLoaderComponent, ValidatorMessageContainer, DynamicValidatorMessage, StudentFormComponent, TeacherFormComponent],
   template: `
     <app-auth>
       <div class="flex flex-col items-center">
@@ -136,23 +135,23 @@ import {TeacherFormComponent} from './teacher-form/teacher-form.component';
 })
 export class RegistrationComponent implements OnInit {
 
-  protected subdivisions$!: Observable<Subdivision[]>;
-
   private fb = inject(FormBuilder);
   private toastr = inject(ToastrService);
   private formsApi = inject(FormsApi);
   private authApi = inject(AuthApi);
   private authStore = inject(AuthStore);
+  private subdivisionsService = inject(SubdivisionsService);
   private router = inject(Router);
   private loading = inject(LoadingService);
   private destroyRef = inject(DestroyRef);
   cd = inject(ChangeDetectorRef);
 
+  protected subdivisions$ = this.subdivisionsService.subdivisions$;
+
   roles: { label: string, value: string }[] = [
     {label: 'Студент', value: 'student'},
     {label: 'Викладач', value: 'teacher'},
   ];
-
 
   roleSubject$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 

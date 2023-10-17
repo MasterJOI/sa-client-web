@@ -10,11 +10,17 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
-        path: 'home',
+        path: '',
         loadComponent:
-          () => import('./pages/home/home.component')
-            .then(m => m.HomeComponent),
+          () => import('./pages/card-menu/card-menu.component')
+            .then(m => m.CardMenuComponent),
       },
+      {
+        path: 'accreditation',
+        loadChildren: () =>
+          import('./pages/accreditation/accreditation.routes')
+            .then(m => m.AccreditationRoutes)
+      }
     ]
   },
   {

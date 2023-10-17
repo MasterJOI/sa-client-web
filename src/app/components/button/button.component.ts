@@ -16,7 +16,8 @@ import {CommonModule} from '@angular/common';
             <ng-content></ng-content>
         </button>
     `,
-    styles: [``],
+    styles: [
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonComponent {

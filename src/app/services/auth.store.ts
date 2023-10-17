@@ -1,4 +1,4 @@
-import {BehaviorSubject, catchError, map, Observable, shareReplay, switchMap, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, map, Observable, shareReplay, skip, switchMap, tap, throwError} from 'rxjs';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {AuthData} from '../dto/auth/AuthData';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -9,8 +9,7 @@ import {LocalStorageService} from 'ngx-webstorage';
 import {Router} from '@angular/router';
 import {AuthApi} from '../api/auth.api';
 import {UserRegistrationRequestBody} from '../dto/auth/UserRegistrationRequestBody';
-
-const AUTH_DATA = "auth_data";
+import {AUTH_DATA} from '../util/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -96,7 +95,7 @@ export class AuthStore {
       switchMap(authData => {
         this.handleAuthentication(authData);
         return this.loadCurrentUser().pipe(
-          tap(() => this.router.navigate(['home']))
+          tap(() => this.router.navigate(['']))
         )
       })
     );
@@ -111,9 +110,7 @@ export class AuthStore {
         switchMap(authData => {
           this.handleAuthentication(authData);
           return this.loadCurrentUser().pipe(
-            tap(() => {
-              this.router.navigate(['home'])
-            })
+            tap(() => this.router.navigate(['']))
           )
         })
       );
