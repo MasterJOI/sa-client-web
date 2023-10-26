@@ -1,12 +1,19 @@
 import {
-  ControlMeasuresAndAcademicIntegrity, EducationalEnvironmentAndMaterialResource, EducationalProgram,
+  ControlMeasuresAndAcademicIntegrity,
+  EducationalEnvironmentAndMaterialResource,
+  EducationalProgram,
   EducationalProgramAccess,
   EducationalProgramLearningAndTeaching,
-  EducationalProgramStructureAndContent, EducationalTransparencyAndPublicity, HumanResource, OpDevelopmentPerspective,
-  ProgramDesign, QualityAssurance
+  EducationalProgramStructureAndContent,
+  EducationalTransparencyAndPublicity,
+  HumanResource,
+  OpDevelopmentPerspective,
+  ProgramDesign,
+  QualityAssurance
 } from './SelfAssessmentInfo';
 
 export class CriteriaUpdateRequestBody {
+  general?: ChangedFields<any>
   programDesign?: ChangedFields<ProgramDesign>
   structureAndContent?: ChangedFields<EducationalProgramStructureAndContent>
   programAccess?: ChangedFields<EducationalProgramAccess>

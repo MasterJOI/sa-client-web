@@ -4,14 +4,15 @@ import {BaseControlDirective, dynamicControlProvider} from '../base-control.dire
 import {ReactiveFormsModule, Validators} from '@angular/forms';
 import {SaFormTextareaComponent} from '../../sa-form-textarea/sa-form-textarea.component';
 import {EducationalEnvironmentAndMaterialResource} from '../../../../../dto/self_assessment/SelfAssessmentInfo';
+import {InitFormDirective} from '../init-form.directive';
 
 @Component({
   selector: 'app-c7-educational-environment-and-material-resource',
   standalone: true,
   viewProviders: [dynamicControlProvider],
-  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent],
+  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, InitFormDirective],
   template: `
-    <div formGroupName="educationalEnvironmentAndMaterialResource" class="flex flex-col gap-4">
+    <div formGroupName="educationalEnvironmentAndMaterialResource" initForm formName="educationalEnvironmentAndMaterialResource" class="flex flex-col gap-4">
       <app-sa-form-textarea
         label="Продемонструйте, яким чином фінансові та матеріально-технічні ресурси (бібліотека, інша інфраструктура, обладнання тощо), а також навчально-методичне забезпечення ОП забезпечують досягнення визначених ОП цілей та програмних результатів навчання?"
         controlKey="financialResources"

@@ -8,14 +8,15 @@ import {
   EducationalProgramStructureAndContent,
   ProgramDesign
 } from '../../../../../dto/self_assessment/SelfAssessmentInfo';
+import {InitFormDirective} from '../init-form.directive';
 
 @Component({
   selector: 'app-c2-structure-and-content',
   standalone: true,
   viewProviders: [dynamicControlProvider],
-  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, DynamicValidatorMessage],
+  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, DynamicValidatorMessage, InitFormDirective],
   template: `
-    <div formGroupName="structureAndContent" class="flex flex-col gap-4">
+    <div formGroupName="structureAndContent" initForm formName="structureAndContent" class="flex flex-col gap-4">
       <div class="form-field">
         <label for="epCreditsAmount">Яким є обсяг ОП (у кредитах ЄКТС)?</label>
         <input formControlName="epCreditsAmount" type="number" id="epCreditsAmount"

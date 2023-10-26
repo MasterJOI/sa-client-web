@@ -29,6 +29,8 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {StudentFormComponent} from './student-form/student-form.component';
 import {TeacherFormComponent} from './teacher-form/teacher-form.component';
 import {SubdivisionsService} from '../../../services/subdivisions.service';
+import {DropdownModule} from 'primeng/dropdown';
+import {roles} from '../../../util/constants';
 
 @Component({
   selector: 'app-registration',
@@ -36,7 +38,7 @@ import {SubdivisionsService} from '../../../services/subdivisions.service';
   providers: [
     LoadingService
   ],
-  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ButtonComponent, RouterLink, PageLoaderComponent, ValidatorMessageContainer, DynamicValidatorMessage, StudentFormComponent, TeacherFormComponent],
+  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ButtonComponent, RouterLink, PageLoaderComponent, ValidatorMessageContainer, DynamicValidatorMessage, StudentFormComponent, TeacherFormComponent, DropdownModule],
   template: `
     <app-auth>
       <div class="flex flex-col items-center">
@@ -82,9 +84,13 @@ import {SubdivisionsService} from '../../../services/subdivisions.service';
           </div>
           <div class="form-field">
             <label for="role">Роль</label>
-            <select id="role" formControlName="role">
-              <option *ngFor="let role of roles" [value]="role.value">{{role.label}}</option>
-            </select>
+            <p-dropdown id="role"
+                        styleClass="w-full"
+                        [options]="roles"
+                        formControlName="role"
+                        optionLabel="label"
+                        optionValue="value"
+            ></p-dropdown>
           </div>
 
           <ng-container *ngIf="(roleSubject$ | async) === 'student'">
@@ -138,22 +144,16 @@ export class RegistrationComponent implements OnInit {
   private fb = inject(FormBuilder);
   private toastr = inject(ToastrService);
   private formsApi = inject(FormsApi);
-  private authApi = inject(AuthApi);
   private authStore = inject(AuthStore);
   private subdivisionsService = inject(SubdivisionsService);
-  private router = inject(Router);
   private loading = inject(LoadingService);
   private destroyRef = inject(DestroyRef);
   cd = inject(ChangeDetectorRef);
 
   protected subdivisions$ = this.subdivisionsService.subdivisions$;
+  protected readonly roles = roles;
 
-  roles: { label: string, value: string }[] = [
-    {label: 'Студент', value: 'student'},
-    {label: 'Викладач', value: 'teacher'},
-  ];
-
-  roleSubject$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  roleSubject$: BehaviorSubject<string> = new BehaviorSubject<string>('student');
 
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective
@@ -174,7 +174,7 @@ export class RegistrationComponent implements OnInit {
     address: ['', Validators.required],
     phoneNumber: ['', Validators.required],
     role: this.fb.nonNullable.control(
-      this.roles[this.roles.length - 1],
+      this.roles[0].value,
       Validators.required
     ),
     password: this.fb.group({
@@ -246,5 +246,4 @@ export class RegistrationComponent implements OnInit {
     };
     return registrationRequest;
   }
-
 }

@@ -4,14 +4,15 @@ import {BaseControlDirective, dynamicControlProvider} from '../base-control.dire
 import {ReactiveFormsModule, Validators} from '@angular/forms';
 import {SaFormTextareaComponent} from '../../sa-form-textarea/sa-form-textarea.component';
 import {HumanResource} from '../../../../../dto/self_assessment/SelfAssessmentInfo';
+import {InitFormDirective} from '../init-form.directive';
 
 @Component({
   selector: 'app-c6-human-resource',
   standalone: true,
   viewProviders: [dynamicControlProvider],
-  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent],
+  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, InitFormDirective],
   template: `
-    <div formGroupName="humanResource" class="flex flex-col gap-4">
+    <div formGroupName="humanResource" initForm formName="humanResource" class="flex flex-col gap-4">
       <app-sa-form-textarea
         label="Яким чином під час конкурсного добору викладачів ОП забезпечується необхідний рівень їх професіоналізму?"
         controlKey="competencyLevel"

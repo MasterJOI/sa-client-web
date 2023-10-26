@@ -65,6 +65,7 @@ export class SelfAssessmentFormComponent implements OnInit {
   }
 
   onFormClose() {
+    this.educationProgramsStore.setActiveSection('');
     this.router.navigate(['/accreditation']);
   }
 

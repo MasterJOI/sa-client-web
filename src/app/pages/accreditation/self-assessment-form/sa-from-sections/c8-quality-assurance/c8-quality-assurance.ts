@@ -4,14 +4,15 @@ import {BaseControlDirective, dynamicControlProvider} from '../base-control.dire
 import {ReactiveFormsModule, Validators} from '@angular/forms';
 import {SaFormTextareaComponent} from '../../sa-form-textarea/sa-form-textarea.component';
 import {QualityAssurance} from '../../../../../dto/self_assessment/SelfAssessmentInfo';
+import {InitFormDirective} from '../init-form.directive';
 
 @Component({
   selector: 'app-c8-quality-assurance',
   standalone: true,
   viewProviders: [dynamicControlProvider],
-  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent],
+  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, InitFormDirective],
   template: `
-    <div formGroupName="qualityAssurance" class="flex flex-col gap-4">
+    <div formGroupName="qualityAssurance" initForm formName="qualityAssurance" class="flex flex-col gap-4">
       <app-sa-form-textarea
         label="Яким документом ЗВО регулюються процедури розроблення, затвердження, моніторингу та періодичного перегляду освітніх програм? Наведіть посилання на цей документ, оприлюднений у відкритому доступі в мережі Інтернет"
         controlKey="regulatoryDocument"

@@ -1,4 +1,4 @@
-import {Directive, inject, StaticProvider} from '@angular/core';
+import {AfterViewInit, Directive, inject, OnInit, StaticProvider} from '@angular/core';
 import {ControlContainer, FormBuilder, FormGroup} from '@angular/forms';
 
 

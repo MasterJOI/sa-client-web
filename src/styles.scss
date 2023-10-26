@@ -84,7 +84,15 @@
 
     /*p-multiselect*/
 
-    .p-multiselect-item {
+    .p-overlay.p-component {
+      max-width: 97%;
+
+      .p-dropdown-item {
+        @apply overflow-hidden text-ellipsis;
+      }
+    }
+
+    .sidebar-multiselect .p-multiselect-item {
       @apply max-w-[450px];
 
       & span {
@@ -93,11 +101,15 @@
     }
 
     .p-multiselect-token {
-      @apply max-w-[200px];
+      @apply max-w-[200px] mr-1;
 
       & span {
         @apply overflow-hidden text-ellipsis;
       }
+    }
+
+    .p-inputtext {
+      @apply pl-3;
     }
   }
 }
@@ -127,7 +139,7 @@
     }
 
     &.button--danger {
-      @apply bg-red-700 text-gray-0 hover:bg-red-500;
+      @apply bg-red-500 text-gray-0 hover:bg-red-400;
     }
 
     &.button--disabled {
@@ -191,11 +203,6 @@
       @apply table-fixed;
     }
 
-    &.with-delete table td:first-child,
-    &.with-delete table th:first-child {
-      @apply w-[70px] #{!important};
-    }
-
     & table thead tr th,
     & table tbody tr td {
       @apply h-16 text-center #{!important};
@@ -227,6 +234,17 @@
 
     .p-dialog-header {
       @apply gap-2;
+    }
+  }
+
+  /*general table*/
+  .general {
+    table th {
+      @apply p-3 text-start;
+    }
+
+    a {
+      @apply text-link hover:underline
     }
   }
 }

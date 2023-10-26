@@ -6,8 +6,10 @@ import {ToastrService} from 'ngx-toastr';
 import {tap} from 'rxjs/operators';
 import {LoadingService} from './loading.service';
 import {
+  GeneralInformation,
   ProgramEducationalComponent,
-  SelfAssessmentInfo, StudyResult,
+  SelfAssessmentInfo,
+  StudyResult,
   TeacherInformation
 } from '../dto/self_assessment/SelfAssessmentInfo';
 import {ChangedFields, CriteriaUpdateRequestBody} from '../dto/self_assessment/CriteriaUpdateRequestBody';
@@ -27,12 +29,21 @@ export class EducationProgramsStore {
 
   private selfAssessmentInfoSubject = new BehaviorSubject<SelfAssessmentInfo | null>(null);
   selfAssessmentInfo$: Observable<SelfAssessmentInfo | null> = this.selfAssessmentInfoSubject.asObservable();
+  generalInformation$: Observable<GeneralInformation | undefined> = this.selfAssessmentInfo$.pipe(
+    map(info => info?.generalInformation)
+  );
 
   private activeSectionIdSub$ = new BehaviorSubject<string>('');
-  activeSectionId:Observable<string> = this.activeSectionIdSub$.asObservable();
+  activeSectionId: Observable<string> = this.activeSectionIdSub$.asObservable();
+
+  initialFormValues = new BehaviorSubject<any>({});
 
   setActiveSection(sectionId: string) {
     this.activeSectionIdSub$.next(sectionId);
+  }
+
+  getGeneralInformation(): GeneralInformation {
+    return this.selfAssessmentInfoSubject.getValue()?.generalInformation!;
   }
 
   getComponentInformation(): ProgramEducationalComponent[] {
@@ -74,12 +85,18 @@ export class EducationProgramsStore {
   }
 
   saveChangedCriteria(id: string, criteria: ChangedFields<CriteriaUpdateRequestBody>) {
+    let selfAssessmentInfo = this.selfAssessmentInfoSubject.getValue()!;
     const loadSaveChangedCriteria$ = this.accreditationApi.saveChangedCriteria(id, criteria).pipe(
       catchError(err => {
         this.toastr.warning('Не вдалося зберегти дані');
         return throwError(err);
       }),
-      tap(res => this.toastr.success(res.message))
+      tap(res => {
+        this.initialFormValues.next({});
+        this.toastr.success(res.message);
+        selfAssessmentInfo = res.data
+        this.selfAssessmentInfoSubject.next(selfAssessmentInfo);
+      })
     );
 
     this.loading.showLoaderUntilCompleted(loadSaveChangedCriteria$)
@@ -118,7 +135,7 @@ export class EducationProgramsStore {
       }),
       tap((response) => {
         saveAs(response, programId + '.pdf');
-    }));
+      }));
 
     this.loading.showLoaderUntilCompleted(loadGenerateSelfAssessmentDocument$).subscribe();
   }
@@ -127,18 +144,52 @@ export class EducationProgramsStore {
     let programs = this.educationProgramsSubject.getValue();
 
     const loadCreateProgram$ = this.accreditationApi.createProgram(formData).pipe(
-        map(res => res.data),
-        catchError(err => {
-          this.toastr.warning('Не вдалося створити освітню програму');
-          return throwError(err);
-        }),
-        tap(newProgram => {
-          programs = [...programs, newProgram];
-          this.educationProgramsSubject.next(programs);
-        })
+      map(res => res.data),
+      catchError(err => {
+        this.toastr.warning('Не вдалося створити освітню програму');
+        return throwError(err);
+      }),
+      tap(newProgram => {
+        programs = [...programs, newProgram];
+        this.educationProgramsSubject.next(programs);
+      })
     );
 
     this.loading.showLoaderUntilCompleted(loadCreateProgram$)
       .subscribe();
+  }
+
+  uploadGeneralDocument(value: any) {
+    let selfAssessmentInfo = this.selfAssessmentInfoSubject.getValue()!;
+    const id = this.getSelfAssessmentId()!;
+    const loadOploadGeneralDocument$ = this.accreditationApi.uploadGeneralDocument(id, value).pipe(
+      catchError(err => {
+        this.toastr.warning('Не вдалося завантажити документ');
+        return throwError(err);
+      }),
+      tap(res => {
+        this.toastr.success(res.message);
+        selfAssessmentInfo = {
+          ...selfAssessmentInfo,
+          generalInformation: {
+            ...selfAssessmentInfo.generalInformation,
+            educationProgramDocuments: res.data
+          }
+        }
+        this.selfAssessmentInfoSubject.next(selfAssessmentInfo);
+        this.initialFormValues.next({});
+      })
+    );
+
+    this.loading.showLoaderUntilCompleted(loadOploadGeneralDocument$)
+      .subscribe();
+  }
+
+  downloadFile(id: string, name: string) {
+    this.accreditationApi.downloadFile(id).subscribe((response) => {
+      saveAs(response, name)
+    }, () => {
+      this.toastr.error('Не вдалося завантажити файл');
+    });
   }
 }

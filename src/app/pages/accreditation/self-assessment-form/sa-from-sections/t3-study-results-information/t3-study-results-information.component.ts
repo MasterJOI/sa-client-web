@@ -163,10 +163,10 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
                   <img
                     src="assets/icons/ic_remove.svg"
                     alt="Remove correspondence">
-                  <p class="text-gray-950 text-title">Видалити</p>
+                  <p class="text-gray-950 text-title">Видалити компонент</p>
                 </div>
               </app-button>
-              <hr>
+              <hr class="border-secondary-600 rounded space-y-2">
             </div>
             <app-button
               classes="button--primary h-12 w-full"
@@ -176,7 +176,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
                 <img
                   src="assets/icons/ic_plus.svg"
                   alt="Add correspondence">
-                <p class="text-gray-950 text-title">Додати</p>
+                <p class="text-gray-950 text-title">Додати компонент</p>
               </div>
             </app-button>
           </fieldset>
@@ -242,14 +242,7 @@ export class T3StudyResultsInformationComponent implements OnInit {
   studyResultsForm = this.fb.nonNullable.group({
     name: [''],
     isCorresponds: [false],
-    componentCorrespondences: this.fb.nonNullable.array([
-      this.fb.group({
-        id: null,
-        disciplineId: ['', [Validators.required]],
-        teachingMethod: '',
-        assessmentForm: ''
-      })
-    ])
+    componentCorrespondences: this.fb.nonNullable.array([])
   });
 
   ngOnInit() {
@@ -293,6 +286,7 @@ export class T3StudyResultsInformationComponent implements OnInit {
   }
 
   addCorrespondence() {
+    // @ts-ignore
     this.studyResultsForm.controls.componentCorrespondences.push(new FormGroup({
         id: new FormControl(null),
         disciplineId: new FormControl(this.disciplines[0].id, [Validators.required]),
@@ -312,12 +306,13 @@ export class T3StudyResultsInformationComponent implements OnInit {
     this.studyResultsService.selectedStudyResult(null);
     this.studyResultsForm.reset();
     this.componentCorrespondences.clear();
+
   }
 
   onStudyResultAdd() {
-    this.componentCorrespondences.controls[0].patchValue({ discipline: this.disciplines[0].id});
     this.isEditable = false;
     this.formVisible = true;
+    this.addCorrespondence();
   }
 
   onStudyResultsFormSubmit() {

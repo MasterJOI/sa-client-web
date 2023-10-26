@@ -29,14 +29,14 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
   ],
   imports: [CommonModule, TableModule, TagModule, ButtonComponent, PageLoaderComponent, RouterLink, SaModalComponent, DialogActionComponent, DynamicValidatorMessage, FormsModule, ReactiveFormsModule, StudentFormComponent, TeacherFormComponent, ValidatorMessageContainer, DropdownModule, CreateProgramFormComponent],
   template: `
-    <p-table dataKey="id"
+    <p-table dataKey="educationProgramId"
              [value]="(educationPrograms$ | async)!"
              [scrollable]="true"
              scrollHeight="500px"
              [(selection)]="selectedPrograms"
-             styleClass="list-table with-delete"
+             styleClass="list-table with-actions"
              responsiveLayout="scroll"
-             groupRowsBy="id"
+             groupRowsBy="educationProgramId"
              [paginator]="true"
              [rows]="ROWS_IN_TABLE"
              (onPage)="onPageChange($event)"
@@ -59,7 +59,7 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th *ngIf="(educationPrograms$ | async)!.length > 0">
+          <th *ngIf="(educationPrograms$ | async)!.length > 0" class="w-[70px]">
             <div class="flex items-center gap-3">
               <p-tableHeaderCheckbox class="flex justify-center items-center"></p-tableHeaderCheckbox>
               <button
@@ -72,22 +72,22 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
               </button>
             </div>
           </th>
-          <th>ID ОП</th>
+          <th class="w-[100px]">ID ОП</th>
           <th>Рівень вищої освіти</th>
           <th>Спеціальність</th>
           <th>Назва ОП</th>
           <th>Тип ОП
           </th>
-          <th>Статус</th>
-          <th></th>
+          <th class="w-[100px]">Статус</th>
+          <th class="w-[60px]"></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-program let-rowIndex="rowIndex">
         <tr>
-          <td>
+          <td class="w-[70px]">
             <p-tableCheckbox [value]="program"></p-tableCheckbox>
           </td>
-          <td>
+          <td class="w-[100px]">
             {{program.educationProgramId}}
           </td>
           <td>
@@ -102,12 +102,12 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
           <td>
             {{program.programType}}
           </td>
-          <td>
+          <td class="w-[100px]">
             <p-tag [value]="program.status" [severity]="getSeverity(program.status)" [rounded]="true"></p-tag>
           </td>
-          <td>
+          <td class="w-[60px]">
             <button id="dropdownMenuIconButton" data-dropdown-placement="left" data-dropdown-toggle="dropdownDots"
-                    class="" type="button">
+                    class="w-[14px]" type="button">
               <img
                 src="assets/icons/ic_dots.svg"
                 alt="Edit">
@@ -124,7 +124,7 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
                       alt="Відомості">
                     Відомості про СО</a>
                 </li>
-                <li>
+                <!--<li>
                   <a
                     href="#"
                     class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
@@ -132,7 +132,7 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
                       src="assets/icons/ic_analyze.svg"
                       alt="Аналіз">
                     Аналіз</a>
-                </li>
+                </li>-->
                 <li>
                   <button
                     class="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
@@ -166,13 +166,13 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
     </ng-template>
 
     <ng-template #deleteContentTemplate>
-      <div class="p-6 text-center">
+      <div class="p-3 text-center">
         <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true"
              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
         </svg>
-        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Ви дійсно хочете видалити обрані освітні програми: {{selectedPrograms.length}}?</h3>
+        <h3 class="text-lg font-normal text-gray-500 dark:text-gray-400">Ви дійсно хочете видалити обрані освітні програми: {{selectedPrograms.length}}?</h3>
       </div>
     </ng-template>
 

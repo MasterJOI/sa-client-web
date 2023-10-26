@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SaFormTextareaComponent} from '../sa-form-textarea/sa-form-textarea.component';
 import {SaFormHintBlockComponent} from '../sa-form-hint-block/sa-form-hint-block.component';
@@ -37,11 +37,12 @@ import {
 } from '../sa-from-sections/t3-study-results-information/t3-study-results-information.component';
 import {ChangedFields, CriteriaUpdateRequestBody} from '../../../../dto/self_assessment/CriteriaUpdateRequestBody';
 import * as _ from 'lodash';
+import {GeneralComponent} from '../sa-from-sections/general/general.component';
 
 @Component({
   selector: 'app-sa-form-main',
   standalone: true,
-  imports: [CommonModule, SaFormTextareaComponent, SaFormHintBlockComponent, ReactiveFormsModule, C1ProgramDesignComponent, C2StructureAndContentComponent, C3ProgramAccessComponent, C4LearningAndTeachingComponent, C5ControlMeasuresAndAcademicIntegrity, C7EducationalEnvironmentAndMaterialResource, C8QualityAssurance, C9TransparencyAndPublicity, C10EducationalProgram, C11DevelopmentPerspective, T1ProgramComponentsInformationComponent, C6HumanResource, C7EducationalEnvironmentAndMaterialResource, C11DevelopmentPerspective, T2TeacherSummaryInformationComponent, T3StudyResultsInformationComponent],
+  imports: [CommonModule, SaFormTextareaComponent, SaFormHintBlockComponent, ReactiveFormsModule, C1ProgramDesignComponent, C2StructureAndContentComponent, C3ProgramAccessComponent, C4LearningAndTeachingComponent, C5ControlMeasuresAndAcademicIntegrity, C7EducationalEnvironmentAndMaterialResource, C8QualityAssurance, C9TransparencyAndPublicity, C10EducationalProgram, C11DevelopmentPerspective, T1ProgramComponentsInformationComponent, C6HumanResource, C7EducationalEnvironmentAndMaterialResource, C11DevelopmentPerspective, T2TeacherSummaryInformationComponent, T3StudyResultsInformationComponent, GeneralComponent],
   template: `
     <div *ngIf="selfAssessmentInfo$ | async as selfAssessmentInfo">
       <form
@@ -50,7 +51,7 @@ import * as _ from 'lodash';
         [formGroup]="saForm"
         (ngSubmit)="onSubmit()">
         <ng-container [ngSwitch]="activeSectionId$ | async">
-
+          <app-general *ngSwitchCase="'g'"></app-general>
           <app-c1-program-design
             *ngSwitchCase="'c1'"
             [initialData]="selfAssessmentInfo.programDesign"
@@ -134,6 +135,7 @@ export class SaFormMainComponent implements AfterViewInit {
   selfAssessmentInfo$ = this.educationProgramsStore.selfAssessmentInfo$;
   activeSectionId$ = this.educationProgramsStore.activeSectionId;
   private fb = inject(FormBuilder);
+
   saForm = this.fb.group({});
 
   ngAfterViewInit() {
@@ -143,15 +145,13 @@ export class SaFormMainComponent implements AfterViewInit {
   }
 
   onSubmit() {
-    //if (this.saForm.invalid) return;
-    this.selfAssessmentInfo$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((selfAssessmentInfo) => {
-      const formData = this.saForm.value;
-      const changedFields = this.getChangedFields(selfAssessmentInfo, formData);
+    const formData = this.saForm.value;
+    const initialFormValues = this.educationProgramsStore.initialFormValues.getValue();
+    const changedFields = this.getChangedFields(initialFormValues, formData);
 
-      if (Object.keys(changedFields).length !== 0) {
-        this.educationProgramsStore.saveChangedCriteria(selfAssessmentInfo!.id, changedFields);
-      }
-    });
+    if (Object.keys(changedFields).length !== 0) {
+      this.educationProgramsStore.saveChangedCriteria(this.educationProgramsStore.getSelfAssessmentId()!, changedFields);
+    }
   }
 
   private getChangedFields(objectData: any, formData: any): ChangedFields<CriteriaUpdateRequestBody> {

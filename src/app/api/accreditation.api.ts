@@ -4,9 +4,14 @@ import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {EducationProgram} from '../dto/education_programs/EducationProgram';
 import {Advise} from '../dto/self_assessment/Advise';
-import {SelfAssessmentInfo} from '../dto/self_assessment/SelfAssessmentInfo';
+import {
+  GeneralInformation,
+  ProgramEducationalComponent,
+  SelfAssessmentInfo
+} from '../dto/self_assessment/SelfAssessmentInfo';
 import {ChangedFields, CriteriaUpdateRequestBody} from '../dto/self_assessment/CriteriaUpdateRequestBody';
 import {ApiResponse} from '../dto/ApiResponse';
+import {ComponentInformationRequestBody} from '../dto/self_assessment/tables/ComponentInformationRequestBody';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +30,8 @@ export class AccreditationApi {
       `${environment.api}/accreditation/${programId}`);
   }
 
-  public saveChangedCriteria(id: string, criteria: ChangedFields<CriteriaUpdateRequestBody>): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(
+  public saveChangedCriteria(id: string, criteria: ChangedFields<CriteriaUpdateRequestBody>): Observable<ApiResponse<SelfAssessmentInfo>> {
+    return this.http.put<ApiResponse<SelfAssessmentInfo>>(
       `${environment.api}/accreditation/${id}`, criteria);
   }
 
@@ -51,5 +56,24 @@ export class AccreditationApi {
   public createProgram(data: any): Observable<ApiResponse<EducationProgram>> {
     return this.http.post<ApiResponse<EducationProgram>>(
       `${environment.api}/accreditation/new`, data);
+  }
+
+  public uploadGeneralDocument(id: string, value: any): Observable<ApiResponse<any>> {
+
+    let formData: FormData = new FormData();
+    if (value.file) formData.append('file', value.file);
+    formData.append('name', value.name);
+    formData.append('type', value.type);
+
+    return this.http.post<ApiResponse<ProgramEducationalComponent>>(
+      `${environment.api}/accreditation/upload/${id}`, formData);
+  }
+
+  public downloadFile(id: string): Observable<Blob> {
+    let params = new HttpParams()
+      .append('id', id);
+    return this.http.get<Blob>(
+      `${environment.api}/accreditation/download`,
+      {responseType: 'blob' as 'json', params: params});
   }
 }

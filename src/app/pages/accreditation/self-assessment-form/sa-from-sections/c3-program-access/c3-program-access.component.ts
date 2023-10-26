@@ -4,14 +4,15 @@ import {BaseControlDirective, dynamicControlProvider} from '../base-control.dire
 import {ReactiveFormsModule, Validators} from '@angular/forms';
 import {SaFormTextareaComponent} from '../../sa-form-textarea/sa-form-textarea.component';
 import {EducationalProgramAccess} from '../../../../../dto/self_assessment/SelfAssessmentInfo';
+import {InitFormDirective} from '../init-form.directive';
 
 @Component({
   selector: 'app-c3-program-access',
   standalone: true,
   viewProviders: [dynamicControlProvider],
-  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent],
+  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, InitFormDirective],
   template: `
-    <div formGroupName="programAccess" class="flex flex-col gap-4">
+    <div formGroupName="programAccess" initForm formName="programAccess" class="flex flex-col gap-4">
       <app-sa-form-textarea
         label="Наведіть посилання на веб-сторінку, яка містить інформацію про правила прийому на навчання та вимоги до вступників ОП"
         controlKey="admissionRulesLink"

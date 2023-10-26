@@ -4,14 +4,15 @@ import {ReactiveFormsModule, Validators} from '@angular/forms';
 import {SaFormTextareaComponent} from '../../sa-form-textarea/sa-form-textarea.component';
 import {BaseControlDirective, dynamicControlProvider} from '../base-control.directive';
 import {ProgramDesign} from '../../../../../dto/self_assessment/SelfAssessmentInfo';
+import {InitFormDirective} from '../init-form.directive';
 
 @Component({
   selector: 'app-c1-program-design',
   standalone: true,
   viewProviders: [dynamicControlProvider],
-  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent],
+  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, InitFormDirective],
   template: `
-    <div formGroupName="programDesign" class="flex flex-col gap-4">
+    <div formGroupName="programDesign" initForm formName="programDesign" class="flex flex-col gap-4">
       <app-sa-form-textarea
         label="Якими є цілі ОП? У чому полягають особливості (унікальність) цієї програми?"
         controlKey="goals"

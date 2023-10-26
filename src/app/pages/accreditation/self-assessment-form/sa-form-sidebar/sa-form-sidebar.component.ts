@@ -34,6 +34,7 @@ export class SaFormSidebarComponent {
   activeSectionId$ = this.educationProgramsStore.activeSectionId;
 
   sections: { id: string, label: string }[] = [
+    {id: 'g', label: 'Загальні відомості'},
     {id: 'c1', label: '1. Проектування та цілі освітньої програми'},
     {id: 'c2', label: '2. Структура та зміст освітньої програми'},
     {id: 'c3', label: '3. Доступ до освітньої програми та визнання результатів навчання'},

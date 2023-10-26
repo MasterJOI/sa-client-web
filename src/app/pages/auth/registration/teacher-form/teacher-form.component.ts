@@ -3,6 +3,9 @@ import {CommonModule} from '@angular/common';
 import {DynamicValidatorMessage} from '../../../../forms/error/dynamic-validator-message.directive';
 import {ControlContainer, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Subdivision} from '../../../../dto/subdivision/Subdivision';
+import {cycles} from '../../../../util/constants';
+import {DropdownModule} from 'primeng/dropdown';
+import {SubdivisionsService} from '../../../../services/subdivisions.service';
 
 @Component({
   selector: 'app-teacher-form',
@@ -13,7 +16,7 @@ import {Subdivision} from '../../../../dto/subdivision/Subdivision';
       useFactory: () => inject(ControlContainer, {skipSelf: true})
     }
   ],
-  imports: [CommonModule, DynamicValidatorMessage, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, DynamicValidatorMessage, FormsModule, ReactiveFormsModule, DropdownModule],
   template: `
     <fieldset formGroupName="teacher">
       <legend>Викладач</legend>
@@ -22,11 +25,14 @@ import {Subdivision} from '../../../../dto/subdivision/Subdivision';
         <input formControlName="hireDate" type="date" id="hireDate">
       </div>
       <div class="form-field">
-        <label for="subdivision">Структурний підрозділ</label>
-        <select multiple id="subdivision" formControlName="subdivisions">
-          <option *ngFor="let subdivision of subdivisions"
-                  [value]="subdivision.id">{{subdivision.name}}</option>
-        </select>
+        <label for="subdivisionId">Структурний підрозділ</label>
+        <p-dropdown id="subdivisionId"
+                    styleClass="w-full"
+                    [options]="subdivisions"
+                    formControlName="subdivisionId"
+                    optionLabel="name"
+                    optionValue="id"
+        ></p-dropdown>
       </div>
       <div class="form-field">
         <label for="teacherId">Унікальний номер у системі</label>
@@ -43,6 +49,7 @@ export class TeacherFormComponent implements OnInit, OnDestroy {
 
   parentContainer = inject(ControlContainer);
   fb = inject(FormBuilder);
+  private subdivisionsService = inject(SubdivisionsService);
 
   @Input()
   subdivisions: Subdivision[] = [];
@@ -55,10 +62,7 @@ export class TeacherFormComponent implements OnInit, OnDestroy {
     this.parentFormGroup.addControl('teacher',
       this.fb.nonNullable.group({
         hireDate: ['', [Validators.required]],
-        subdivisions: this.fb.nonNullable.control(
-          [this.subdivisions],
-          Validators.required
-        ),
+        subdivisionId: [this.subdivisions[0].id, [Validators.required]],
         teacherId: ['', [Validators.required]],
       }));
   }
@@ -66,4 +70,6 @@ export class TeacherFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.parentFormGroup.removeControl('teacher');
   }
+
+  protected readonly cycles = cycles;
 }

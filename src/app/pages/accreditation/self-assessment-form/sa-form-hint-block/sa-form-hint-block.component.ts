@@ -9,7 +9,7 @@ import {Advise} from '../../../../dto/self_assessment/Advise';
   standalone: true,
   imports: [CommonModule, ButtonComponent, PageLoaderComponent],
   template: `
-    <div class="flex flex-col p-4 bg-primary-50 rounded gap-4 relative min-h-full h-auto w-full">
+    <div class="flex flex-col p-4 bg-primary-50 rounded gap-4 relative min-h-full h-auto w-full overflow-clip">
 
       <app-page-loader></app-page-loader>
 

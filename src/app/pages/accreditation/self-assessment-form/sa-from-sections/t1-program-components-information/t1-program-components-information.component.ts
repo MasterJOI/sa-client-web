@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ROWS_IN_TABLE} from '../../../../../util/constants';
+import {componentTypes, ROWS_IN_TABLE} from '../../../../../util/constants';
 import {ButtonComponent} from '../../../../../components/button/button.component';
 import {SharedModule} from 'primeng/api';
 import {TableModule} from 'primeng/table';
@@ -64,7 +64,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
                         {{component.componentName}}
                     </td>
                     <td>
-                        {{componentTypes[component.componentType]}}
+                        {{getDocumentType(component.componentType)}}
                     </td>
                     <td>
                         {{component.documentName}}
@@ -96,10 +96,14 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
                             [noAdvice]="true"
                     ></app-sa-form-textarea>
                     <div class="form-field">
-                        <label for="type">Вид компонента</label>
-                        <select id="type" formControlName="componentType">
-                            <option *ngFor="let type of componentTypes; let i = index" [value]="i">{{type}}</option>
-                        </select>
+                        <label for="componentType">Вид компонента</label>
+                      <p-dropdown id="componentType"
+                                  styleClass="w-full"
+                                  [options]="componentTypes"
+                                  formControlName="componentType"
+                                  optionLabel="label"
+                                  optionValue="value"
+                      ></p-dropdown>
                     </div>
                     <ng-container *ngIf="selectedProgramComponent?.documentPath">
                         <div class="form-field">
@@ -116,8 +120,8 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
                                 >
                                     <img
                                             style="filter: invert(100%) sepia(0%) saturate(7434%) hue-rotate(21deg) brightness(119%) contrast(105%);"
-                                            width="20px"
-                                            height="20px"
+                                            width="16px"
+                                            height="16px"
                                             src="assets/icons/ic_download.svg"
                                             alt="Download file">
                                 </app-button>
@@ -187,13 +191,12 @@ export class T1ProgramComponentsInformationComponent implements OnInit {
     formVisible = false;
     isEditable: boolean = false;
 
-    componentTypes: string[] = ['навчальна дисципліна', 'практика', 'підсумкова атестація', 'курсова робота (проект)'];
     componentForm = this.fb.nonNullable.group({
         componentName: ['', [Validators.maxLength(200)]],
-        componentType: [0],
+        componentType: [componentTypes[0].value],
         documentName: [''],
         document: new UntypedFormControl('',
-            [Validators.required, fileValidator]),
+            [Validators.nullValidator, fileValidator]),
         specialEquipmentInfo: ['', [Validators.maxLength(1500)]]
     });
 
@@ -263,4 +266,10 @@ export class T1ProgramComponentsInformationComponent implements OnInit {
             this.selectedProgramComponent!.documentName
         );
     }
+
+  protected readonly componentTypes = componentTypes;
+
+  getDocumentType(componentType: string) {
+    return componentTypes.find(t => t.value === componentType)?.label;
+  }
 }

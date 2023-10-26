@@ -8,12 +8,16 @@ import {SaModalComponent} from '../sa-modal.component';
 import {cycles, programTypes} from '../../../util/constants';
 import {SpecialityService} from '../../../services/speciality.service';
 import {PageLoaderComponent} from '../../page-loader/page-loader.component';
+import {HeiService} from '../../../services/hei.service';
+import {TeacherService} from '../../../services/teacher.service';
 
 @Component({
   selector: 'app-create-program-form',
   standalone: true,
   providers: [
-    SpecialityService
+    SpecialityService,
+    HeiService,
+    TeacherService
   ],
   imports: [CommonModule, ButtonComponent, DropdownModule, DynamicValidatorMessage, FormsModule, ReactiveFormsModule, PageLoaderComponent],
   template: `
@@ -23,6 +27,16 @@ import {PageLoaderComponent} from '../../page-loader/page-loader.component';
             (ngSubmit)="onCreationSubmit()"
             class="flex flex-col gap-2.5"
       >
+        <div class="form-field">
+          <label for="heiId">Заклад вищої освіти</label>
+          <p-dropdown id="heiId"
+                      styleClass="sidebar-dropdown w-full"
+                      [options]="(heis$ | async)!"
+                      formControlName="heiId"
+                      optionLabel="name"
+                      optionValue="id"
+          ></p-dropdown>
+        </div>
         <div class="form-field">
           <label for="educationProgramId">ID освітньої програми в ЄДБО</label>
           <input
@@ -73,6 +87,18 @@ import {PageLoaderComponent} from '../../page-loader/page-loader.component';
                       optionValue="value"
           ></p-dropdown>
         </div>
+        <div class="form-field">
+          <label for="guaranteeId">Гарант освітньої програми</label>
+          <p-dropdown id="guaranteeId"
+                      styleClass="sidebar-dropdown w-full"
+                      [options]="(guarantees$ | async)!"
+                      formControlName="guaranteeId"
+                      optionLabel="name"
+                      optionValue="id"
+                      [filter]="true"
+                      filterBy="name"
+          ></p-dropdown>
+        </div>
       </form>
 
       <app-button
@@ -84,28 +110,35 @@ import {PageLoaderComponent} from '../../page-loader/page-loader.component';
       </app-button>
     </div>
   `,
-  styles: [
-  ],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateProgramFormComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private specialityService = inject(SpecialityService);
+  private teacherService = inject(TeacherService);
+  private heiService = inject(HeiService);
   saModal = inject(SaModalComponent);
 
   specialities$ = this.specialityService.specialities$;
+  heis$ = this.heiService.heis$;
+  guarantees$ = this.teacherService.teachers$;
 
   form = this.fb.group({
+    heiId: ['', [Validators.required]],
     educationProgramId: ['', [Validators.required]],
     cycle: [cycles[0].value, [Validators.required]],
     specialtyId: ['', [Validators.required]],
     name: ['', [Validators.required]],
-    programType: [programTypes[0].value, [Validators.required]]
+    programType: [programTypes[0].value, [Validators.required]],
+    guaranteeId: ['', [Validators.required]],
   });
 
   ngOnInit() {
     this.specialityService.getSpecialities();
+    this.heiService.getHeis();
+    this.teacherService.getTeachers();
   }
 
   onCreationSubmit() {

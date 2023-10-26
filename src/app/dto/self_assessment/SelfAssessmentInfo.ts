@@ -1,5 +1,9 @@
+import {Subdivision} from '../subdivision/Subdivision';
+import {Language} from '../language/Lanugage';
+
 export interface SelfAssessmentInfo {
   id: string
+  generalInformation: GeneralInformation
   programDesign: ProgramDesign
   structureAndContent: EducationalProgramStructureAndContent
   programAccess: EducationalProgramAccess
@@ -20,6 +24,95 @@ export interface SelfAssessmentInfo {
   studyResultsMatrix: {
     studyResults: StudyResult[]
   }
+}
+
+export interface GeneralInformation {
+  educationProgramAccreditationInformation: ProgramAccreditationInformation;
+  educationStatistic: EducationStatistic[];
+  higherEducationInstitutionArea: HigherEducationInstitutionArea;
+  higherEducationInstitutionInformation: HigherEducationInstitutionInformation;
+  selfAssessmentEducationalProgramRestrictedInfo: SelfAssessmentEducationalProgramRestrictedInfo | null;
+  educationProgramDocuments: EducationProgramDocument[]
+}
+
+export interface ProgramAccreditationInformation {
+  educationProgramId: number;
+  educationProgramName: string;
+  fieldOfStudyCode: number;
+  fieldOfStudy: string;
+  specialtyCode: number;
+  specialty: string;
+  subdivisionId: string;
+  specialtyLicensingInfo: string;
+  cycle: string;
+  specialization: string | null;
+  programType: string;
+  admissionDegree: string;
+  duration: string[];
+  educationProgramForms: string[];
+  location: string;
+  grantsProfessionalQualification: boolean;
+  professionalQualification: string | null;
+  guarantee: Guarantee;
+  languages: Language[];
+  otherSubdivisions: Subdivision[];
+  partnerHei: string;
+  historyAndDevelopment: string;
+}
+
+export interface Guarantee {
+  id: string;
+  teacherId: string;
+  name: string;
+  teacherPosition: string;
+  guaranteeEmail: string;
+  guaranteePhone: string;
+  additionalPhone: string;
+}
+
+export interface EducationStatistic {
+  studyCourseYear: number;
+  academicYear: string;
+  enrollment: number;
+  fullTime: number;
+  evening: number;
+  partTime: number;
+  foreignFullTime: number;
+  foreignEvening: number;
+  foreignPartTime: number;
+}
+
+export interface HigherEducationInstitutionArea {
+  allRooms: number;
+  ownRooms: number;
+  otherRightsRooms: number;
+  rentedRooms: number;
+  educationalAllRooms: number;
+  educationalOwnRooms: number;
+  educationalOtherRightsRooms: number;
+  educationalRentedRooms: number;
+}
+
+export interface HigherEducationInstitutionInformation {
+  heiId: string;
+  higherEducationalInstitutionName: string;
+  institutionCode: number;
+  website: string;
+  headFullName: string;
+}
+
+export interface SelfAssessmentEducationalProgramRestrictedInfo {
+  infoDescription: string;
+  infoAccessRestrictionType: string;
+  restrictedInfoDescription: string;
+  restrictingAccessGrounds: string;
+}
+
+export interface EducationProgramDocument {
+  id: string;
+  type: string;
+  name: string;
+  path: string;
 }
 
 export interface ProgramDesign {
@@ -140,7 +233,7 @@ export interface OpDevelopmentPerspective {
 export interface ProgramEducationalComponent {
   id: string;
   componentName: string;
-  componentType: number;
+  componentType: string;
   documentName: string;
   documentPath: string;
   specialEquipmentInfo: string;

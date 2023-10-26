@@ -188,7 +188,7 @@ import {
             <div class="form-field">
               <label for="disciplines">Навчальні дисципліни, що їх викладає викладач на ОП</label>
               <p-multiSelect id="disciplines"
-                             styleClass="w-full"
+                             styleClass="sidebar-multiselect w-full"
                              [options]="(disciplines$ | async)!"
                              formControlName="disciplines"
                              optionLabel="name"

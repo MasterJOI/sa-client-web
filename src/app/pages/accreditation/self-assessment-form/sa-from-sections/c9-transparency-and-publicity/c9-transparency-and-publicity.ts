@@ -4,14 +4,15 @@ import {BaseControlDirective, dynamicControlProvider} from '../base-control.dire
 import {ReactiveFormsModule, Validators} from '@angular/forms';
 import {SaFormTextareaComponent} from '../../sa-form-textarea/sa-form-textarea.component';
 import {EducationalTransparencyAndPublicity} from '../../../../../dto/self_assessment/SelfAssessmentInfo';
+import {InitFormDirective} from '../init-form.directive';
 
 @Component({
   selector: 'app-c9-transparency-and-publicity',
   standalone: true,
   viewProviders: [dynamicControlProvider],
-  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent],
+  imports: [CommonModule, ReactiveFormsModule, SaFormTextareaComponent, InitFormDirective],
   template: `
-    <div formGroupName="transparencyAndPublicity" class="flex flex-col gap-4">
+    <div formGroupName="transparencyAndPublicity" initForm formName="transparencyAndPublicity" class="flex flex-col gap-4">
       <app-sa-form-textarea
         label="Якими документами ЗВО регулюється права та обов’язки усіх учасників освітнього процесу? Яким чином забезпечується їх доступність для учасників освітнього процесу?"
         controlKey="regulatoryDocuments"
