@@ -433,12 +433,7 @@ export class GeneralComponent extends BaseControlDirective implements OnInit {
       this.fb.nonNullable.group({
         heiId: [{value: '', disabled: true}],
         educationProgramId: [{value: '', disabled: true}],
-        educationProgramForms: this.fb.nonNullable.array([
-          this.fb.group({
-            educationProgramForm: [''],
-            duration: [''],
-          })
-        ]),
+        educationProgramForms: this.fb.nonNullable.array([]),
         grantsProfessionalQualification: [false],
         professionalQualification: [''],
         subdivisionId: [''],
@@ -527,10 +522,13 @@ export class GeneralComponent extends BaseControlDirective implements OnInit {
           higherEducationInstitutionArea: general.higherEducationInstitutionArea,
         });
 
-        this.patchEducationProgramForms(
-          general.educationProgramAccreditationInformation.duration,
-          general.educationProgramAccreditationInformation.educationProgramForms
-        );
+        if (general.educationProgramAccreditationInformation.duration
+          && general.educationProgramAccreditationInformation.educationProgramForms) {
+          this.patchEducationProgramForms(
+            general.educationProgramAccreditationInformation.duration,
+            general.educationProgramAccreditationInformation.educationProgramForms
+          );
+        }
 
         this.patchEducationStatistic(general.educationStatistic);
         this.patchEducationProgramDocuments(general.educationProgramDocuments);

@@ -25,11 +25,12 @@ import {
   ProgramComponentInformationService
 } from '../t1-program-components-information/program-component-information.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {AutoTitleDirective} from '../../../../../directives/auto-title.directive';
 
 @Component({
   selector: 'app-t3-study-results-information',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, SharedModule, TableModule, CheckboxModule, SidebarModule, ReactiveFormsModule, DynamicValidatorMessage, MultiSelectModule, SaFormTextareaComponent, FormsModule, DropdownModule],
+  imports: [CommonModule, ButtonComponent, SharedModule, TableModule, CheckboxModule, SidebarModule, ReactiveFormsModule, DynamicValidatorMessage, MultiSelectModule, SaFormTextareaComponent, FormsModule, DropdownModule, AutoTitleDirective],
   template: `
     <p-table dataKey="id"
              [value]="(studyResults$ | async)!"

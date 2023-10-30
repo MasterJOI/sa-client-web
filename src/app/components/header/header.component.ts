@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {LogoComponent} from '../logo/logo.component';
 import {AuthStore} from '../../services/auth.store';
@@ -6,12 +6,14 @@ import {RouterLink} from '@angular/router';
 import {CurrentUser} from '../../dto/auth/CurrentUser';
 import {Observable} from 'rxjs';
 import {Flowbite} from 'src/app/util/flowbite.decorator';
+import {Menu, MenuModule} from 'primeng/menu';
+import {MenuItem} from 'primeng/api';
 
 @Flowbite()
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, LogoComponent, RouterLink],
+  imports: [CommonModule, LogoComponent, RouterLink, MenuModule],
   template: `
     <nav class="bg-primary-500 w-full">
       <div class="flex flex-wrap items-center justify-between mx-auto px-4 md:px8 xl:px-16 py-2.5">
@@ -36,9 +38,9 @@ import {Flowbite} from 'src/app/util/flowbite.decorator';
 
               <li class="flex items-center justify-between gap-2">
 
-                <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
+                <p-menu #userMenu [model]="userActions" [popup]="true" appendTo="body"></p-menu>
+                <button (click)="setUserActions($event)"
                         class="flex items-center justify-between gap-1 w-full py-2 pl-3 pr-4  text-gray-800 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 md:w-auto">
-
                   <div
                     class="flex justify-center items-center relative w-10 h-10 overflow-hidden rounded-full border border-gray-950">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -58,23 +60,6 @@ import {Flowbite} from 'src/app/util/flowbite.decorator';
 
                 <div class="w-px h-8 bg-gray-600"></div>
                 <span class="text-gray-800">{{currentUser.username}}</span>
-
-                <!-- Dropdown menu -->
-                <div id="dropdownNavbar"
-                     class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                  <ul class="py-2 text-sm text-gray-800" aria-labelledby="dropdownLargeButton">
-                    <li>
-                      <a href="#" class="block px-4 py-2 hover:bg-gray-100">Аккаунт</a>
-                    </li>
-                  </ul>
-                  <div class="py-1">
-                    <button (click)="logout()"
-                            class="block w-full px-4 py-2 text-start text-sm text-gray-800 hover:bg-gray-100">
-                      Вийти
-                    </button>
-                  </div>
-                </div>
-
               </li>
 
             </ul>
@@ -91,11 +76,32 @@ export class HeaderComponent implements OnInit {
   private authStore = inject(AuthStore);
   currentUser$ = new Observable<CurrentUser | null>();
 
+  @ViewChild('userMenu') userMenu!: Menu;
+  userActions: MenuItem[] = [];
+
   logout() {
     this.authStore.logOut();
   }
 
   ngOnInit() {
     this.currentUser$ = this.authStore.user$;
+  }
+
+  setUserActions($event: MouseEvent) {
+    this.userMenu.toggle($event);
+    this.userActions = [
+      {
+        label: 'Аккаунт',
+        icon: 'pi pi-user',
+        routerLink: ['/accreditation']
+      },
+      {
+        label: 'Вийти',
+        icon: 'pi pi-sign-out',
+        command: () => {
+          this.logout();
+        }
+      }
+    ];
   }
 }

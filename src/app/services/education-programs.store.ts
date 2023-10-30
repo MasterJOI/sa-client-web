@@ -14,6 +14,7 @@ import {
 } from '../dto/self_assessment/SelfAssessmentInfo';
 import {ChangedFields, CriteriaUpdateRequestBody} from '../dto/self_assessment/CriteriaUpdateRequestBody';
 import {saveAs} from 'file-saver';
+import {ROWS_IN_TABLE} from '../util/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class EducationProgramsStore {
 
   private educationProgramsSubject = new BehaviorSubject<EducationProgram[]>([]);
   educationPrograms$: Observable<EducationProgram[]> = this.educationProgramsSubject.asObservable();
+  totalPrograms = new BehaviorSubject<number>(0);
 
   private selfAssessmentInfoSubject = new BehaviorSubject<SelfAssessmentInfo | null>(null);
   selfAssessmentInfo$: Observable<SelfAssessmentInfo | null> = this.selfAssessmentInfoSubject.asObservable();
@@ -37,6 +39,13 @@ export class EducationProgramsStore {
   activeSectionId: Observable<string> = this.activeSectionIdSub$.asObservable();
 
   initialFormValues = new BehaviorSubject<any>({});
+
+  isCreateModalVisibleSub = new BehaviorSubject<boolean>(false);
+  isCreateModalVisible$ = this.isCreateModalVisibleSub.asObservable();
+
+  changeCreateModalVisibility(val: boolean) {
+    this.isCreateModalVisibleSub.next(val);
+  }
 
   setActiveSection(sectionId: string) {
     this.activeSectionIdSub$.next(sectionId);
@@ -60,19 +69,23 @@ export class EducationProgramsStore {
 
   loadEducationPrograms(from: number, count: number) {
     const loadEducationPrograms$ = this.accreditationApi.fetchEducationPrograms(from, count).pipe(
+      map(res => res.data),
       catchError(err => {
         this.toastr.warning('Не вдалося отримати список освітніх програм');
         return throwError(err);
       }),
-      tap(programs => this.educationProgramsSubject.next(programs))
+      tap(programs => {
+        this.educationProgramsSubject.next(programs.data);
+        this.totalPrograms.next(programs.totalRecords);
+      })
     );
 
     this.loading.showLoaderUntilCompleted(loadEducationPrograms$)
       .subscribe();
   }
 
-  loadSelfAssessmentInfo(programId: number) {
-    const loadEducationPrograms$ = this.accreditationApi.fetchSelfAssessmentInfo(programId).pipe(
+  loadSelfAssessmentInfo(id: string) {
+    const loadEducationPrograms$ = this.accreditationApi.fetchSelfAssessmentInfo(id).pipe(
       catchError(err => {
         this.toastr.warning('Не вдалося отримати дані про самооцінювання ОП');
         return throwError(err);
@@ -108,7 +121,7 @@ export class EducationProgramsStore {
     let educationPrograms = this.educationProgramsSubject.getValue();
 
     educationPrograms = educationPrograms.filter(p => !selectedPrograms.includes(p));
-    const filteredIds = selectedPrograms.map(obj => obj.educationProgramId);
+    const filteredIds = selectedPrograms.map(obj => obj.id);
     const loadDeletePrograms$ = this.accreditationApi.deletePrograms(filteredIds).pipe(
       catchError(err => {
         this.toastr.warning('Не вдалося видалити освітню програму');
@@ -127,36 +140,31 @@ export class EducationProgramsStore {
     return this.selfAssessmentInfoSubject.getValue()?.id;
   }
 
-  generateSelfAssessmentDocument(programId: number) {
-    const loadGenerateSelfAssessmentDocument$ = this.accreditationApi.generateSelfAssessmentDocument(programId).pipe(
+  generateSelfAssessmentDocument(id: string) {
+    const loadGenerateSelfAssessmentDocument$ = this.accreditationApi.generateSelfAssessmentDocument(id).pipe(
       catchError(err => {
         this.toastr.error('Не вдалося згенерувати документ');
         return throwError(err);
       }),
       tap((response) => {
-        saveAs(response, programId + '.pdf');
+        saveAs(response, id + '.pdf');
       }));
 
     this.loading.showLoaderUntilCompleted(loadGenerateSelfAssessmentDocument$).subscribe();
   }
 
   createProgram(formData: any) {
-    let programs = this.educationProgramsSubject.getValue();
-
-    const loadCreateProgram$ = this.accreditationApi.createProgram(formData).pipe(
+    return this.accreditationApi.createProgram(formData).pipe(
       map(res => res.data),
       catchError(err => {
         this.toastr.warning('Не вдалося створити освітню програму');
         return throwError(err);
       }),
       tap(newProgram => {
-        programs = [...programs, newProgram];
-        this.educationProgramsSubject.next(programs);
+        this.loadEducationPrograms(0, ROWS_IN_TABLE);
+        this.isCreateModalVisibleSub.next(false);
       })
     );
-
-    this.loading.showLoaderUntilCompleted(loadCreateProgram$)
-      .subscribe();
   }
 
   uploadGeneralDocument(value: any) {

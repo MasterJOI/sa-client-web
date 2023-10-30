@@ -14,7 +14,7 @@ export const AccreditationRoutes: Routes = [
             .then(m => m.EducationProgramsTableComponent)
       },
       {
-        path: ':educationProgramId',
+        path: ':id',
         loadComponent:
           () => import('./self-assessment-form/self-assessment-form.component')
             .then(m => m.SelfAssessmentFormComponent),

@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {EducationProgram} from '../dto/education_programs/EducationProgram';
+import {EducationProgram, EducationProgramsData} from '../dto/education_programs/EducationProgram';
 import {Advise} from '../dto/self_assessment/Advise';
 import {
   GeneralInformation,
@@ -20,14 +20,14 @@ export class AccreditationApi {
 
   private http = inject(HttpClient);
 
-  public fetchEducationPrograms(from: number, count: number): Observable<EducationProgram[]> {
-    return this.http.get<EducationProgram[]>(
+  public fetchEducationPrograms(from: number, count: number): Observable<ApiResponse<EducationProgramsData>> {
+    return this.http.get<ApiResponse<EducationProgramsData>>(
       `${environment.api}/accreditation/all?from=${from}&count=${count}`);
   }
 
-  public fetchSelfAssessmentInfo(programId: number): Observable<SelfAssessmentInfo> {
+  public fetchSelfAssessmentInfo(id: string): Observable<SelfAssessmentInfo> {
     return this.http.get<SelfAssessmentInfo>(
-      `${environment.api}/accreditation/${programId}`);
+      `${environment.api}/accreditation/${id}`);
   }
 
   public saveChangedCriteria(id: string, criteria: ChangedFields<CriteriaUpdateRequestBody>): Observable<ApiResponse<SelfAssessmentInfo>> {
@@ -35,7 +35,7 @@ export class AccreditationApi {
       `${environment.api}/accreditation/${id}`, criteria);
   }
 
-  public deletePrograms(IDs: number[]): Observable<any> {
+  public deletePrograms(IDs: string[]): Observable<any> {
     return this.http.delete<any>(
       `${environment.api}/accreditation?IDs=${IDs}`);
   }
@@ -45,9 +45,9 @@ export class AccreditationApi {
       `${environment.api}/adviser/advise?startWith=${label}`);
   }
 
-  public generateSelfAssessmentDocument(programId: number): Observable<Blob> {
+  public generateSelfAssessmentDocument(id: string): Observable<Blob> {
     let params = new HttpParams()
-      .append('programId', programId)
+      .append('id', id)
     return this.http.get<Blob>(
       `${environment.api}/accreditation/generate`,
       {responseType: 'blob' as 'json', params: params});

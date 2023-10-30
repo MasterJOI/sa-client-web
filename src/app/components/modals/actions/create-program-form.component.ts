@@ -10,6 +10,8 @@ import {SpecialityService} from '../../../services/speciality.service';
 import {PageLoaderComponent} from '../../page-loader/page-loader.component';
 import {HeiService} from '../../../services/hei.service';
 import {TeacherService} from '../../../services/teacher.service';
+import {EducationProgramsStore} from '../../../services/education-programs.store';
+import {LoadingService} from '../../../services/loading.service';
 
 @Component({
   selector: 'app-create-program-form',
@@ -17,11 +19,13 @@ import {TeacherService} from '../../../services/teacher.service';
   providers: [
     SpecialityService,
     HeiService,
-    TeacherService
+    TeacherService,
+    LoadingService
   ],
   imports: [CommonModule, ButtonComponent, DropdownModule, DynamicValidatorMessage, FormsModule, ReactiveFormsModule, PageLoaderComponent],
   template: `
     <div class="flex flex-col gap-5 w-full">
+      <app-page-loader></app-page-loader>
       <form id="creationForm"
             [formGroup]="form"
             (ngSubmit)="onCreationSubmit()"
@@ -119,6 +123,8 @@ export class CreateProgramFormComponent implements OnInit {
   private specialityService = inject(SpecialityService);
   private teacherService = inject(TeacherService);
   private heiService = inject(HeiService);
+  private educationProgramsStore = inject(EducationProgramsStore);
+  private loading = inject(LoadingService);
   saModal = inject(SaModalComponent);
 
   specialities$ = this.specialityService.specialities$;
@@ -147,7 +153,8 @@ export class CreateProgramFormComponent implements OnInit {
       return;
     }
 
-    this.saModal.submitted.next(this.form.value);
+    const loadCreateProgram$ = this.educationProgramsStore.createProgram(this.form.value);
+    this.loading.showLoaderUntilCompleted(loadCreateProgram$).subscribe();
   }
 
   protected readonly cycles = cycles;

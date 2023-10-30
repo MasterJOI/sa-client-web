@@ -14,11 +14,12 @@ import {fileValidator} from 'src/app/forms/validators/file.validator';
 import {ProgramEducationalComponent} from 'src/app/dto/self_assessment/SelfAssessmentInfo';
 import {ProgramComponentInformationService} from './program-component-information.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {AutoTitleDirective} from '../../../../../directives/auto-title.directive';
 
 @Component({
     selector: 'app-t1-program-components-information',
     standalone: true,
-    imports: [CommonModule, ButtonComponent, SharedModule, TableModule, TagModule, SidebarModule, PaginatorModule, ReactiveFormsModule, DynamicValidatorMessage, SaFormTextareaComponent],
+    imports: [CommonModule, ButtonComponent, SharedModule, TableModule, TagModule, SidebarModule, PaginatorModule, ReactiveFormsModule, DynamicValidatorMessage, SaFormTextareaComponent, AutoTitleDirective],
     template: `
         <p-table dataKey="id"
                  [value]="(programComponents$ | async)!"

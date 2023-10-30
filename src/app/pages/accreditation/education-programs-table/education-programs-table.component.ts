@@ -1,15 +1,13 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TableModule, TablePageEvent} from 'primeng/table';
+import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 import {TagModule} from 'primeng/tag';
 import {ButtonComponent} from '../../../components/button/button.component';
-import {Flowbite} from 'src/app/util/flowbite.decorator';
 import {EducationProgram} from '../../../dto/education_programs/EducationProgram';
 import {EducationProgramsStore} from '../../../services/education-programs.store';
 import {PageLoaderComponent} from '../../../components/page-loader/page-loader.component';
 import {ROWS_IN_TABLE} from '../../../util/constants';
 import {RouterLink} from '@angular/router';
-import {LoadingService} from '../../../services/loading.service';
 import {SaModalComponent} from '../../../components/modals/sa-modal.component';
 import {DialogActionComponent} from '../../../components/modals/actions/dialog-action.component';
 import {DynamicValidatorMessage} from '../../../forms/error/dynamic-validator-message.directive';
@@ -19,27 +17,30 @@ import {TeacherFormComponent} from '../../auth/registration/teacher-form/teacher
 import {ValidatorMessageContainer} from '../../../forms/error/input-error/validator-message-container.directive';
 import {DropdownModule} from 'primeng/dropdown';
 import {CreateProgramFormComponent} from '../../../components/modals/actions/create-program-form.component';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {MenuItem} from 'primeng/api';
+import {SplitButtonModule} from 'primeng/splitbutton';
+import {Menu, MenuModule} from 'primeng/menu';
+import {AutoTitleDirective} from '../../../directives/auto-title.directive';
 
-@Flowbite()
 @Component({
   selector: 'app-education-programs-table',
   standalone: true,
-  providers: [
-    LoadingService
-  ],
-  imports: [CommonModule, TableModule, TagModule, ButtonComponent, PageLoaderComponent, RouterLink, SaModalComponent, DialogActionComponent, DynamicValidatorMessage, FormsModule, ReactiveFormsModule, StudentFormComponent, TeacherFormComponent, ValidatorMessageContainer, DropdownModule, CreateProgramFormComponent],
+  imports: [CommonModule, TableModule, TagModule, ButtonComponent, PageLoaderComponent, RouterLink, SaModalComponent, DialogActionComponent, DynamicValidatorMessage, FormsModule, ReactiveFormsModule, StudentFormComponent, TeacherFormComponent, ValidatorMessageContainer, DropdownModule, CreateProgramFormComponent, SplitButtonModule, MenuModule, AutoTitleDirective],
   template: `
-    <p-table dataKey="educationProgramId"
+    <p-table dataKey="id"
              [value]="(educationPrograms$ | async)!"
              [scrollable]="true"
              scrollHeight="500px"
              [(selection)]="selectedPrograms"
-             styleClass="list-table with-actions"
+             styleClass="list-table with-actions autoTitle"
              responsiveLayout="scroll"
-             groupRowsBy="educationProgramId"
+             groupRowsBy="id"
              [paginator]="true"
              [rows]="ROWS_IN_TABLE"
-             (onPage)="onPageChange($event)"
+             [lazy]="true"
+             (onLazyLoad)="onPageChange($event)"
+             [totalRecords]="(totalPrograms$ | async)!"
     >
       <ng-template pTemplate="caption">
         <div class="flex items-center justify-between">
@@ -58,7 +59,7 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
         </div>
       </ng-template>
       <ng-template pTemplate="header">
-        <tr>
+        <tr class="autoTitle">
           <th *ngIf="(educationPrograms$ | async)!.length > 0" class="w-[70px]">
             <div class="flex items-center gap-3">
               <p-tableHeaderCheckbox class="flex justify-center items-center"></p-tableHeaderCheckbox>
@@ -106,46 +107,13 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
             <p-tag [value]="program.status" [severity]="getSeverity(program.status)" [rounded]="true"></p-tag>
           </td>
           <td class="w-[60px]">
-            <button id="dropdownMenuIconButton" data-dropdown-placement="left" data-dropdown-toggle="dropdownDots"
-                    class="w-[14px]" type="button">
+            <p-menu #programMenu [model]="programActions" [popup]="true" appendTo="body"></p-menu>
+            <button class="w-[14px] relative" type="button"
+                    (click)="setProgramActions($event, program.id)">
               <img
                 src="assets/icons/ic_dots.svg"
                 alt="Edit">
             </button>
-
-            <!-- Action menu -->
-            <div id="dropdownDots" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48">
-              <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownMenuIconButton">
-                <li>
-                  <a [routerLink]="['/accreditation', program.educationProgramId]"
-                     class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
-                    <img
-                      src="assets/icons/ic_data.svg"
-                      alt="Відомості">
-                    Відомості про СО</a>
-                </li>
-                <!--<li>
-                  <a
-                    href="#"
-                    class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
-                    <img
-                      src="assets/icons/ic_analyze.svg"
-                      alt="Аналіз">
-                    Аналіз</a>
-                </li>-->
-                <li>
-                  <button
-                    class="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
-                    (click)="onGenerate(program.educationProgramId)"
-                  >
-                    <img
-                    src="assets/icons/ic_export.svg"
-                    alt="Експорт">
-                    Експортувати
-                  </button>
-                </li>
-              </ul>
-            </div>
           </td>
         </tr>
       </ng-template>
@@ -172,7 +140,8 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
         </svg>
-        <h3 class="text-lg font-normal text-gray-500 dark:text-gray-400">Ви дійсно хочете видалити обрані освітні програми: {{selectedPrograms.length}}?</h3>
+        <h3 class="text-lg font-normal text-gray-500 dark:text-gray-400">Ви дійсно хочете видалити обрані освітні
+          програми: {{selectedPrograms.length}}?</h3>
       </div>
     </ng-template>
 
@@ -182,7 +151,6 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
 
     <app-sa-modal
       [(visible)]="isCreateModalVisible"
-      (submitted)="onCreateSubmitted($event)"
       [headerTemplate]="createHeaderTemplate"
       [contentTemplate]="createContentTemplate"
     ></app-sa-modal>
@@ -202,13 +170,15 @@ import {CreateProgramFormComponent} from '../../../components/modals/actions/cre
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EducationProgramsTableComponent implements OnInit {
+export class EducationProgramsTableComponent implements OnInit, OnDestroy {
 
   protected readonly ROWS_IN_TABLE = ROWS_IN_TABLE;
 
   private educationProgramsStore = inject(EducationProgramsStore);
+  private destroyRef = inject(DestroyRef);
 
   educationPrograms$ = this.educationProgramsStore.educationPrograms$;
+  totalPrograms$ = this.educationProgramsStore.totalPrograms.asObservable();
 
   selectedPrograms: EducationProgram[] = [];
   currentPage = 0;
@@ -216,13 +186,22 @@ export class EducationProgramsTableComponent implements OnInit {
   isDeleteModalVisible = false;
   isCreateModalVisible = false;
 
+  @ViewChild('programMenu') programMenu!: Menu;
+  programActions: MenuItem[] = [];
+
   ngOnInit() {
     this.educationProgramsStore.loadEducationPrograms(0, ROWS_IN_TABLE);
+
+    this.educationProgramsStore.isCreateModalVisible$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(res =>
+      this.isCreateModalVisible = res);
   }
 
-  onPageChange(e: TablePageEvent) {
+  onPageChange(e: TableLazyLoadEvent) {
     if (this.currentPage !== e.first) {
-      const from = e.first * ROWS_IN_TABLE;
+      const from = e.first!;
+      this.currentPage = e.first!;
       this.educationProgramsStore.loadEducationPrograms(from, ROWS_IN_TABLE);
     }
   }
@@ -245,21 +224,40 @@ export class EducationProgramsTableComponent implements OnInit {
   }
 
   onCreateModalOpen() {
-    this.isCreateModalVisible = true;
+    this.educationProgramsStore.changeCreateModalVisibility(true);
   }
 
   onDeleteSubmitted(isSubmitted: boolean) {
     this.isDeleteModalVisible = false;
     if (isSubmitted) {
       this.educationProgramsStore.deletePrograms(this.selectedPrograms);
+      this.selectedPrograms = [];
     }
   }
 
-  onCreateSubmitted(formData: any) {
-    this.educationProgramsStore.createProgram(formData);
+  onGenerate(id: string) {
+    this.educationProgramsStore.generateSelfAssessmentDocument(id);
   }
 
-  onGenerate(exportProgramId: number) {
-      this.educationProgramsStore.generateSelfAssessmentDocument(exportProgramId);
+  setProgramActions($event: MouseEvent, id: string) {
+    this.programMenu.toggle($event);
+    this.programActions = [
+      {
+        label: 'Відомості про СО',
+        icon: 'pi pi-book',
+        routerLink: ['/accreditation', id]
+      },
+      {
+        label: 'Експорт',
+        icon: 'pi pi-file-export',
+        command: () => {
+          this.onGenerate(id);
+        }
+      }
+    ];
+  }
+
+  ngOnDestroy() {
+    this.educationProgramsStore.changeCreateModalVisibility(false);
   }
 }

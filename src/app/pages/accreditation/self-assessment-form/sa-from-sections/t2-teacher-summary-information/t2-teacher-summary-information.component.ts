@@ -34,6 +34,7 @@ import {LoadingService} from '../../../../../services/loading.service';
 import {
   ProgramComponentInformationService
 } from '../t1-program-components-information/program-component-information.service';
+import {AutoTitleDirective} from '../../../../../directives/auto-title.directive';
 
 @Component({
   selector: 'app-t2-teacher-summary-information',
@@ -42,7 +43,7 @@ import {
     TeacherSummaryService,
     LoadingService
   ],
-  imports: [CommonModule, ButtonComponent, SharedModule, TableModule, TagModule, SidebarModule, PaginatorModule, ReactiveFormsModule, DynamicValidatorMessage, SaFormTextareaComponent, MultiSelectModule, ValidatorMessageContainer, PageLoaderComponent],
+  imports: [CommonModule, ButtonComponent, SharedModule, TableModule, TagModule, SidebarModule, PaginatorModule, ReactiveFormsModule, DynamicValidatorMessage, SaFormTextareaComponent, MultiSelectModule, ValidatorMessageContainer, PageLoaderComponent, AutoTitleDirective],
   template: `
     <p-table dataKey="id"
              [value]="(teachers$ | async)!"

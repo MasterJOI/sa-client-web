@@ -9,10 +9,8 @@ import {
   TemplateRef
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Flowbite} from '../../util/flowbite.decorator';
 import {DialogModule} from 'primeng/dialog';
 
-@Flowbite()
 @Component({
   selector: 'app-sa-modal',
   standalone: true,
@@ -21,7 +19,7 @@ import {DialogModule} from 'primeng/dialog';
     <p-dialog
       [(visible)]="visible"
       [modal]="true"
-      styleClass="sa-modal"
+      styleClass="sa-modal relative"
       [draggable]="false"
       [resizable]="false"
       [closable]="true"
@@ -53,13 +51,13 @@ import {DialogModule} from 'primeng/dialog';
 export class SaModalComponent {
 
   @Input() visible: boolean = false;
-  @Output() visibleChange:EventEmitter<any> = new EventEmitter();
+  @Output() visibleChange: EventEmitter<any> = new EventEmitter();
 
   @Input() headerTemplate!: TemplateRef<any>;
   @Input() contentTemplate!: TemplateRef<any>;
   @Input() footerTemplate!: TemplateRef<any>;
 
-  @Output() submitted:EventEmitter<any> = new EventEmitter();
+  @Output() submitted: EventEmitter<any> = new EventEmitter();
 
   injector = inject(Injector);
 }

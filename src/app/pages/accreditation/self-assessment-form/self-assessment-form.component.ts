@@ -54,13 +54,13 @@ export class SelfAssessmentFormComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      const programId = +params['educationProgramId'];
-      if (isNaN(programId)) {
+      const id = params['id'];
+      if (!id) {
         this.router.navigate(['/404']);
         return;
       }
 
-      this.educationProgramsStore.loadSelfAssessmentInfo(programId);
+      this.educationProgramsStore.loadSelfAssessmentInfo(id);
     });
   }
 
