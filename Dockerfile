@@ -10,16 +10,15 @@ RUN npm install
 
 ARG profile
 ARG myHref
-ARG deployUrl
 COPY ./src/ /usr/local/app/src
-COPY ./karma.conf.js /usr/local/app/
+COPY ./postcss.config.js /usr/local/app/
+COPY ./tailwind.config.js /usr/local/app/
 COPY ./angular.json /usr/local/app/
-COPY ./.browserslistrc /usr/local/app/
 COPY ./tsconfig.app.json /usr/local/app/
 COPY ./tsconfig.json /usr/local/app/
 COPY ./tsconfig.spec.json /usr/local/app/
 
-RUN npm run build --  --base-href=$myHref --configuration=$profile --deploy-url=$deployUrl
+RUN npm run build --base-href=$myHref --configuration=$profile
 
 
 #Deployment stage

@@ -1,5 +1,5 @@
 # To deploy build&deploy
-1. On the server go to  dir with dockerfile (`/opt/dev-sa-client`) and run  `docker build . -t cip/sa-client-dev:0.0.1 --build-arg myHref=/dev/ --build-arg profile=development --build-arg deployUrl=/dev/ `
+1. On the server go to  dir with dockerfile (`/opt/dev-sa-client`) and run  `docker build . -t ipze/sa-client-dev:0.0.1 --build-arg myHref=/dev/ --build-arg profile=development --build-arg deployUrl=/dev/ `
 # 2. Go to the dir (`/opt/npworx-errors/`) and insert there folder with custom error page from Github project (`src/custom_50x`)
 3. Run ```docker run  -p 4705:80
    -d
