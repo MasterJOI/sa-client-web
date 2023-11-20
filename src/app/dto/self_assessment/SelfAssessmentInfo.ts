@@ -251,6 +251,16 @@ export interface TeacherInformation {
   rationale: string;
 }
 
+export interface TeacherBio {
+  teacherId: string;
+  name: string;
+  teacherPosition: string;
+  subdivision: string;
+  teacherQualification: string;
+  teacherExperience: number;
+  rationale: string;
+}
+
 export interface StudyResult {
   id: string;
   name: string;

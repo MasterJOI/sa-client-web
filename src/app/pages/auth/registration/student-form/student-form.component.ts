@@ -23,11 +23,11 @@ import {cycles} from '../../../../util/constants';
         <input formControlName="enrollmentDate" type="date" id="enrollmentDate">
       </div>
       <div class="form-field">
-        <label for="studentType">Освітній ступінь</label>
-        <p-dropdown id="studentType"
+        <label for="cycle">Освітній ступінь</label>
+        <p-dropdown id="cycle"
                     styleClass="w-full"
                     [options]="cycles"
-                    formControlName="studentType"
+                    formControlName="cycle"
                     optionLabel="label"
                     optionValue="value"
         ></p-dropdown>
@@ -56,7 +56,7 @@ export class StudentFormComponent implements OnInit, OnDestroy {
     this.parentFormGroup.addControl('student',
       this.fb.nonNullable.group({
         enrollmentDate: ['', [Validators.required]],
-        studentType: this.fb.nonNullable.control(
+        cycle: this.fb.nonNullable.control(
           'BACHELOR',
           Validators.required
         ),

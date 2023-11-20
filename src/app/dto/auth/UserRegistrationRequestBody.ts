@@ -1,6 +1,6 @@
 interface StudentRegistrationRequestBody {
   studentId: string
-  studentType: number
+  cycle: string
   enrollmentDate: Date
 }
 
