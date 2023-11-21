@@ -1,4 +1,15 @@
-import {BehaviorSubject, catchError, map, Observable, shareReplay, skip, switchMap, tap, throwError} from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  filter,
+  map,
+  Observable, of,
+  shareReplay,
+  skip,
+  switchMap,
+  tap,
+  throwError
+} from 'rxjs';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {AuthData} from '../dto/auth/AuthData';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -41,6 +52,7 @@ export class AuthStore {
   }
 
   constructor() {
+    console.log('constructor')
     this.isLoggedIn$ = this.user$.pipe(
       map(user => !!user),
       takeUntilDestroyed()
@@ -129,14 +141,20 @@ export class AuthStore {
 
     if (!authData) {
       this.userSubject.next(null);
-      return;
+      return of(null);
     }
 
     if (!this.userSubject.getValue()) {
-      this.loadCurrentUser().subscribe();
+      return this.loadCurrentUser().pipe(
+        tap(() => this.autoLogOut(AuthStore.getTokenExpirationPeriod(authData._expirationDate.toString()))),
+        catchError(() => {
+          return of(null);
+        }),
+      );
     }
 
     this.autoLogOut(AuthStore.getTokenExpirationPeriod(authData._expirationDate.toString()));
+    return of(null);
   }
 
   logOut() {

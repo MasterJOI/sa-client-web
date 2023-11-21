@@ -8,6 +8,7 @@ import {Router, RouterLink} from '@angular/router';
 import {DynamicValidatorMessage} from '../../../forms/error/dynamic-validator-message.directive';
 import {AuthStore} from '../../../services/auth.store';
 import {LoadingService} from '../../../services/loading.service';
+import {PageLoaderComponent} from '../../../components/page-loader/page-loader.component';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ import {LoadingService} from '../../../services/loading.service';
   providers: [
     LoadingService
   ],
-  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ButtonComponent, RouterLink, DynamicValidatorMessage],
+  imports: [CommonModule, AuthComponent, LogoComponent, ReactiveFormsModule, ButtonComponent, RouterLink, DynamicValidatorMessage, PageLoaderComponent],
   template: `
     <app-auth>
       <div class="flex flex-col items-center">
@@ -52,6 +53,8 @@ import {LoadingService} from '../../../services/loading.service';
           <p class="text-title">Увійти</p>
         </app-button>
       </div>
+
+      <app-page-loader></app-page-loader>
     </app-auth>
   `,
   styles: [],

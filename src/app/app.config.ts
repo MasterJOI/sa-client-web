@@ -3,7 +3,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {AuthStore} from './services/auth.store';
-import {take} from 'rxjs';
+import {switchMap, take} from 'rxjs';
 import {NgxWebstorageModule} from 'ngx-webstorage';
 import {RouterModule} from '@angular/router';
 import {routes} from './app-routing';
@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
       HttpClientModule,
       NgxWebstorageModule.forRoot(),
       ToastrModule.forRoot({
-        timeOut: 10000,
+        timeOut: 8000,
         positionClass: 'toast-top-right',
         maxOpened: 5,
         preventDuplicates: false,
@@ -33,8 +33,10 @@ export const appConfig: ApplicationConfig = {
       useFactory: (authStore: AuthStore) => {
         return () => {
           initFlowbite();
-          authStore.autoLogin();
-          return authStore.user$.pipe(take(1));
+          return authStore.autoLogin().pipe(
+            // @ts-ignore
+            switchMap(() => authStore.user$.pipe(take(1)))
+          );
         }
       },
       deps: [AuthStore]

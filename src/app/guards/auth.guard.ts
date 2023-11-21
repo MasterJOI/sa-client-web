@@ -10,12 +10,11 @@ export const authGuard = () => {
 
   return authStore.isLoggedIn$.pipe(
     map(res => {
-      return true;
-      /*if (!res) {
+      if (!res) {
         return router.parseUrl('/login');
       } else {
         return true;
-      }*/
+      }
     })
   )
 };
