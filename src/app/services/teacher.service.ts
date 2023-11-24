@@ -4,7 +4,6 @@ import {FormsApi} from '../api/forms.api';
 import {ToastrService} from 'ngx-toastr';
 import {LoadingService} from './loading.service';
 import {tap} from 'rxjs/operators';
-import {Hei} from '../dto/hei/Hei';
 import {Teacher} from '../dto/teacher/Teacher';
 
 @Injectable()

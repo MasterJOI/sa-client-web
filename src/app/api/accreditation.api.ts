@@ -4,14 +4,9 @@ import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {EducationProgram, EducationProgramsData} from '../dto/education_programs/EducationProgram';
 import {Advise} from '../dto/self_assessment/Advise';
-import {
-  GeneralInformation,
-  ProgramEducationalComponent,
-  SelfAssessmentInfo
-} from '../dto/self_assessment/SelfAssessmentInfo';
+import {ProgramEducationalComponent, SelfAssessmentInfo} from '../dto/self_assessment/SelfAssessmentInfo';
 import {ChangedFields, CriteriaUpdateRequestBody} from '../dto/self_assessment/CriteriaUpdateRequestBody';
 import {ApiResponse} from '../dto/ApiResponse';
-import {ComponentInformationRequestBody} from '../dto/self_assessment/tables/ComponentInformationRequestBody';
 
 @Injectable({
   providedIn: 'root'

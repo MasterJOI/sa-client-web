@@ -124,7 +124,7 @@ module.exports = {
         "6xl": "3.5625rem"
       },
       "fontFamily": {
-        "inter": "Inter",
+        "inter": "InterRegular",
         "kharkiv-tone": "KharkivTone"
       },
       "boxShadow": {
@@ -158,7 +158,6 @@ module.exports = {
   plugins: [
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
-    require('tailwindcss-font-inter'),
     require('flowbite/plugin')
   ],
 }

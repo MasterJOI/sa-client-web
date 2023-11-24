@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SaFormTextareaComponent} from '../sa-form-textarea/sa-form-textarea.component';
 import {SaFormHintBlockComponent} from '../sa-form-hint-block/sa-form-hint-block.component';

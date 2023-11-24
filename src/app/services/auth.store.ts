@@ -1,15 +1,4 @@
-import {
-  BehaviorSubject,
-  catchError,
-  filter,
-  map,
-  Observable, of,
-  shareReplay,
-  skip,
-  switchMap,
-  tap,
-  throwError
-} from 'rxjs';
+import {BehaviorSubject, catchError, map, Observable, of, shareReplay, switchMap, tap, throwError} from 'rxjs';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {AuthData} from '../dto/auth/AuthData';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
