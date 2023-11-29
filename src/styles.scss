@@ -230,7 +230,8 @@
   /*sa-modal*/
 
   .sa-modal {
-    border: 2px solid theme('colors.gray.900');;
+    max-width: 90vw;
+    border: 2px solid theme('colors.gray.900');
     @apply w-auto rounded shadow;
 
     .p-dialog-header {
@@ -247,6 +248,11 @@
     a {
       @apply text-link hover:underline
     }
+  }
+
+  /*toast*/
+  .p-toast .p-toast-message .p-toast-message-content {
+    @apply border-none;
   }
 }
 

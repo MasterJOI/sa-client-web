@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
       HttpClientModule,
       NgxWebstorageModule.forRoot(),
       ToastrModule.forRoot({
-        timeOut: 8000,
+        timeOut: 10000,
         positionClass: 'toast-top-right',
         maxOpened: 5,
         preventDuplicates: false,

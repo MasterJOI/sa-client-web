@@ -41,7 +41,7 @@ import {PageLoaderComponent} from '../../../components/page-loader/page-loader.c
           </div>
         </form>
         <span
-          class="text-end text-gray-400 text-input-message font-normal font-inter leading-tight"
+          class="text-end text-gray-400 text-input-message font-normal leading-tight"
         >
           <a [routerLink]="['/register']" class="text-link hover:underline">Зареєструватися.</a>
         </span>

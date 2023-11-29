@@ -120,7 +120,7 @@ import {roles} from '../../../util/constants';
         </form>
 
         <span
-          class="text-end text-gray-400 text-input-message font-normal font-inter leading-tight"
+          class="text-end text-gray-400 text-input-message font-normal leading-tight"
         >
           Вже маєте аккаунт? <a [routerLink]="['/login']" class="text-link hover:underline">Увійти.</a>
         </span>

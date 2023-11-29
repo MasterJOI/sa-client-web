@@ -130,9 +130,10 @@ import {AutoTitleDirective} from '../../../../../directives/auto-title.directive
                         </div>
                     </ng-container>
                     <div class="form-field">
-                        <label for="hireDate">Поле для завантаження файлу</label>
+                        <label for="fileInput">Поле для завантаження файлу</label>
                         <div>
                             <input
+                                    name="fileInput"
                                     #fileInput
                                     type="file"
                                     (click)="fileInput.value = ''"

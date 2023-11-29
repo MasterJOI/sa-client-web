@@ -140,7 +140,7 @@ import {AutoTitleDirective} from '../../../directives/auto-title.directive';
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
         </svg>
-        <h3 class="text-lg font-normal text-gray-500 dark:text-gray-400">Ви дійсно хочете видалити обрані освітні
+        <h3 class="text-lg font-normal text-gray-500">Ви дійсно хочете видалити обрані освітні
           програми: {{selectedPrograms.length}}?</h3>
       </div>
     </ng-template>
